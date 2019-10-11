@@ -1,3 +1,27 @@
-<resources>
-    <string name="app_name">Go4Lunch</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+    <!-- FACEBOOK -->
+    <string name="app_name">Go4Lunch-alx</string>
+    <string name="facebook_app_id">2328560603927397</string>
+    <string name="facebook_login_protocol_scheme">fb2328560603927397</string>
+    <string name="facebook_application_id" translatable="false">2328560603927397</string>
+
+    <!-- MAIN ACTIVITY -->
+    <string name="error_not_connected">Vous devez vous connecter !</string>
+    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
+    <string name="error_no_internet">Aucune connexion internet !</string>
+    <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
+    <string name="connection_succeed">Authentification réussie !</string>
+    <string name="button_login_text_logged">Afficher le profil</string>
+    <string name="button_login_text_not_logged">Connexion</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- BOTTOM NAVIGATION -->
+    <string name="title_map">Map View</string>
+    <string name="title_list">List View</string>
+    <string name="title_mates">Workmates</string>
+    <string name="title_activity_maps">Map</string>
+
 </resources>
