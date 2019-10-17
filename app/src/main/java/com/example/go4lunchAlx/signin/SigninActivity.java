@@ -13,6 +13,7 @@ import com.example.go4lunchAlx.TestActivity;
 import com.example.go4lunchAlx.main.MainActivity;
 import com.example.go4lunchAlx.R;
 
+import com.example.go4lunchAlx.nearby_places.testList;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -36,9 +37,10 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
         constraintLayout = findViewById(R.id.signin_constraint_layout);
 
-        //startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, testList.class)); //marche ok !
 
-       startSignInActivity();
+       //startSignInActivity();
     }
 
     private void testUserLogued() {

@@ -11,6 +11,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
+        //MULTIDEX
         multiDexEnabled true
     }
     buildTypes {
@@ -19,9 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {
+
+    //MULTIDEX
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -50,14 +57,14 @@ dependencies {
     //PLACES
     implementation 'com.google.android.libraries.places:places:2.0.0'
 
-    // Firebase
+    // FIREBASE
     implementation "com.google.firebase:firebase-core:17.2.0"
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    //implementation 'com.google.firebase:firebase-messaging:20.0.0'
     implementation 'com.google.firebase:firebase-database:19.1.0'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
-    // FirebaseUI
+    // FIREBASE-UI
     implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
     implementation 'com.firebaseui:firebase-ui-firestore:4.3.2'

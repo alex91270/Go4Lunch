@@ -21,6 +21,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 //import com.google.android.libraries.places.api.Places;
 //import com.google.android.gms.location.LocationListener;
 
@@ -33,16 +36,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.fragment_map);
 
 
-        //Places.initialize(this, "@string/google_maps_key");
+        Places.initialize(this, "AIzaSyAhwPQxQ6UU4V7VQ7IxYsvFa3WzoNJ2qDg");
 
-        if (isPermitted()) {
+        Log.i("alex", String.valueOf(Places.isInitialized()));
+
+        PlacesClient placesClient = Places.createClient(this);
+
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_widget);
+
+        Log.i("alex", String.valueOf(Places.isInitialized()));
+
+        /**if (isPermitted()) {
             getMap();
         } else {
             requestPermission();
         }
+         */
     }
 
     public boolean isPermitted() {
