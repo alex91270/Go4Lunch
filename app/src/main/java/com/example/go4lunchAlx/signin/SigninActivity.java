@@ -38,8 +38,9 @@ public class SigninActivity extends AppCompatActivity {
         constraintLayout = findViewById(R.id.signin_constraint_layout);
 
         startActivity(new Intent(this, MainActivity.class));
-        //startActivity(new Intent(this, testList.class)); //marche ok !
 
+
+        //startActivity(new Intent(this, testList.class)); //marche ok !
        //startSignInActivity();
     }
 

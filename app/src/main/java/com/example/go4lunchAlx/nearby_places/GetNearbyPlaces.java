@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class GetNearbyPlaces {
@@ -48,6 +49,7 @@ public class GetNearbyPlaces {
     public void downloadNearbyRestaurants() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        result = "success";
 
         //LatLng loc1 = new LatLng(48, 2);
         //service.setCurrentLocation(loc1);
@@ -87,8 +89,10 @@ public class GetNearbyPlaces {
             }
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error processing Places API URL", e);
+            result = "Error processing Places API URL";
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error connecting to Places API", e);
+            result = "Error connecting to Places API";
         } finally {
             if (conn != null) {
                 conn.disconnect();
@@ -110,40 +114,96 @@ public class GetNearbyPlaces {
 
             for (int i = 0; i < predsJsonArray.length(); i++) {
 
-                String latitude = predsJsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getString("lat");
-                String longitude = predsJsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getString("lng");
-                LatLng location = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
-                String reference = predsJsonArray.getJSONObject(i).getString("reference");
-                String name = predsJsonArray.getJSONObject(i).getString("name");
-                //String rating = predsJsonArray.getJSONObject(i).getString("rating");
-                String vicinity = predsJsonArray.getJSONObject(i).getString("vicinity");
-                //String opening = predsJsonArray.getJSONObject(i).getString("opening_hours");
-
-                String rating = "no rating";
-                if (!predsJsonArray.getJSONObject(i).isNull("rating")) {
-                    rating = predsJsonArray.getJSONObject(i).getString("rating");
-                }
-
-                String opening = "no opening hours";
-                if (!predsJsonArray.getJSONObject(i).isNull("opening_hours")) {
-                    opening = predsJsonArray.getJSONObject(i).getString("opening_hours");
-                }
-
-
-
-                Restaurant restaurant = new Restaurant(reference, name, "url", location, rating, vicinity, opening);
-                Log.i("alex", name + " " + opening);
-
-                service.addNearbyRestaurant(restaurant);
+                JSONObject jsonObject = predsJsonArray.getJSONObject(i);
+                Restaurant resto = buildRestaurantFromJson(jsonObject);
+                service.addNearbyRestaurant(resto);
             }
             Log.i("alex", "list size: " + String.valueOf(service.getAllRestaurants().size()));
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error processing JSON results", e);
+            result = "Error processing JSON result";
         }
 
-
-        result = "mon resultat";
         onNearbyPlacesReadyCallback.OnNearbyPlacesReady(result);
+    }
+
+    private Restaurant buildRestaurantFromJson(JSONObject jsonObject) {
+
+        try {
+            String latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
+            String longitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
+            LatLng location = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+            String reference = jsonObject.getString("reference");
+            String name = jsonObject.getString("name");
+            String vicinity = jsonObject.getString("vicinity");
+            int distance = calculateDistance(location, service.getCurrentLocation());
+            String photo;
+
+            try{
+                photo = jsonObject.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
+            } catch (JSONException e) {
+                Log.i("alex", "no photo array ");
+                photo = null;
+            }
+            //JSONObject photo1 = photosArray.getJSONObject(0);
+            //String photo = photo1.getString("photo_reference");
+
+            //if (jsonObject.getJSONArray("photos").isNull(0)) {
+                //Log.i("alex", "no photo array ");
+            //}
+                //String photo = jsonObject.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
+                //Log.i("alex", "photoref: " + photo);
+
+
+
+
+            double rating = 0;
+            if (!jsonObject.isNull("rating")) {
+                rating = Double.valueOf(jsonObject.getString("rating"));
+            }
+
+            String opening = "No opening hours";
+            if (!jsonObject.isNull("opening_hours")) {
+                if( jsonObject.getJSONObject("opening_hours").getString("open_now") == "true") {
+                    opening = "opened";
+                }
+                if( jsonObject.getJSONObject("opening_hours").getString("open_now") == "false") {
+                    opening = "closed";
+                }
+        }
+            return new Restaurant(reference, name, photo, location, rating, vicinity, opening, distance);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "Error processing JSON results", e);
+            result = "Error extracting JSON restaurant";
+        }
+
+        return null;
+    }
+
+    public int calculateDistance(LatLng StartP, LatLng EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+
+        return (int) Math.floor(Radius * c * 1000);
     }
 }
 

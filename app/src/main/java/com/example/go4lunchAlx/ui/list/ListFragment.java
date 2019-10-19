@@ -1,5 +1,6 @@
 package com.example.go4lunchAlx.ui.list;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,25 +9,36 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunchAlx.R;
+import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.RestApiService;
 
 public class ListFragment extends Fragment {
 
-    //private HomeViewModel homeViewModel;
+    private Context mContext;
+    private RestApiService service = DI.getRestApiService();
+    private RecyclerView mRecyclerView;
+    private ListRecyclerViewAdapter myAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //homeViewModel =
+
                 ViewModelProviders.of(this).get(ListViewModel.class);
         View root = inflater.inflate(R.layout.fragment_list, container, false);
-        //final TextView textView = root.findViewById(R.id.text_home);
-        //homeViewModel.getText().observe(this, new Observer<String>() {
-            //@Override
-           // public void onChanged(@Nullable String s) {
-                //textView.setText(s);
-           // }
-        //});
+        mContext = this.getActivity();
+        mRecyclerView = root.findViewById(R.id.list_restaurants);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        myAdapter = new ListRecyclerViewAdapter(service.getAllRestaurants());
+        mRecyclerView.setAdapter(myAdapter);
+
         return root;
     }
+
+
 }

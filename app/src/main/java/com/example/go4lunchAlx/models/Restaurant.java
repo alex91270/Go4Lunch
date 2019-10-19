@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Restaurant {
@@ -12,21 +13,52 @@ public class Restaurant {
     private String name;
     private List<String> attendants;
     private LatLng location;
-    private String rating;
+    private double rating;
     private String vicinity;
     private String opening;
     @Nullable
-    private String urlPicture;
+    private String photo;
+    private int distance;
 
     public Restaurant() { }
 
-    public Restaurant(String id, String name, String urlPicture, LatLng location, String rating, String vicinity, String opening) {
+    public Restaurant(String id, String name, String photo, LatLng location, double rating, String vicinity, String opening, int distance) {
         this.id = id;
         this.name = name;
-        this.urlPicture = urlPicture;
+        this.photo = photo;
         this.location = location;
         this.rating = rating;
         this.vicinity = vicinity;
         this.opening = opening;
+        this.distance = distance;
+        this.attendants = new ArrayList<>();
     }
+
+    public String getId() {return id;}
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhoto() {return photo;}
+
+    public List<String> getAttendants() {return attendants;}
+
+    public void addAttendant(String name){attendants.add(name);}
+
+    public void clearAttendants() {attendants.clear();}
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public String getVicinity() {return vicinity;}
+
+    public double getRating() {return rating;}
+
+    public String getOpening() {return opening;}
 }
