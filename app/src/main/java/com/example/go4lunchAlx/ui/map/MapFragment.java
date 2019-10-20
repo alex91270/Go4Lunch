@@ -129,7 +129,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 service.setCurrentLocation(userLocation);
 
-                //centerMapOnLocation(userLocation, "Your location");
+                centerMapOnLocation(userLocation);
 
             }
 
@@ -152,13 +152,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         locationManager.requestLocationUpdates("gps", 1000, 100, locationListener);
     }
 
-    public void centerMapOnLocation(LatLng userLocation, String title) {
+    public void centerMapOnLocation(LatLng userLocation) {
 
         if (userLocation != null) {
             Log.i("alex", "centering location");
             mMap.clear();
             mMap.addMarker(new MarkerOptions().position(userLocation).title("me").icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_s)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 20)); //between 1 and 20
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12)); //between 1 and 20
 
 
 
@@ -227,7 +227,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Toast.makeText(mContext, "Place: " + place.getName() + ", " + place.getId(), Toast.LENGTH_LONG).show();
                 LatLng userLocation = place.getLatLng();
                 Log.i("alex", "latlng selected: " + userLocation.toString());
-                centerMapOnLocation(userLocation, "Myself");
+                centerMapOnLocation(userLocation);
             }
 
             @Override
@@ -249,14 +249,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.i("alex", "last location retrieved");
                 Log.i("alex", userLocation.toString());
                 service.setCurrentLocation(userLocation);
-                centerMapOnLocation(userLocation, "Myself");
+                centerMapOnLocation(userLocation);
             }
         });
     }
 
-    public int getZoom() {
-        return 1;
-    }
+
 
 
 

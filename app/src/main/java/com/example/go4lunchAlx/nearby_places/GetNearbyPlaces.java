@@ -143,7 +143,7 @@ public class GetNearbyPlaces {
                 photo = jsonObject.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
             } catch (JSONException e) {
                 Log.i("alex", "no photo array ");
-                photo = null;
+                photo = "no_pic";
             }
             //JSONObject photo1 = photosArray.getJSONObject(0);
             //String photo = photo1.getString("photo_reference");

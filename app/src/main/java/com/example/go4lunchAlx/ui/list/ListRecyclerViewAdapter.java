@@ -65,16 +65,20 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         if(restaurant.getRating()>=4) holder.mStar4.setVisibility(View.VISIBLE);
         if(restaurant.getRating()==5) holder.mStar5.setVisibility(View.VISIBLE);
 
-        mContext = holder.mRestaurantPhoto.getContext();
-        String apiKey = mContext.getString(R.string.google_maps_key);
-        String photoRef = restaurant.getPhoto();
+        if (restaurant.getPhoto() == "no_pic") {
+            holder.mRestaurantPhoto.setImageResource(R.drawable.resto_sign);
+        } else {
+            mContext = holder.mRestaurantPhoto.getContext();
+            String apiKey = mContext.getString(R.string.google_maps_key);
+            String photoRef = restaurant.getPhoto();
 
-        String photoURL = "https://maps.googleapis.com/maps/api/place/photo?photoreference=" + photoRef + "&sensor=false&maxheight=150&maxwidth=150&key=" + apiKey;
+            String photoURL = "https://maps.googleapis.com/maps/api/place/photo?photoreference=" + photoRef + "&sensor=false&maxheight=150&maxwidth=150&key=" + apiKey;
 
-        Glide.with(holder.mRestaurantPhoto.getContext())
-                .load(photoURL)
-                .apply(RequestOptions.centerCropTransform())
-                .into(holder.mRestaurantPhoto);
+            Glide.with(holder.mRestaurantPhoto.getContext())
+                    .load(photoURL)
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(holder.mRestaurantPhoto);
+        }
 
     }
 
