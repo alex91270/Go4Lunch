@@ -148,8 +148,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         };
-
-        locationManager.requestLocationUpdates("gps", 1000, 100, locationListener);
+        Log.i("alex", "location manager setup");
+        locationManager.requestLocationUpdates("gps", 1000, 50, locationListener);
     }
 
     public void centerMapOnLocation(LatLng userLocation) {
@@ -158,9 +158,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.i("alex", "centering location");
             mMap.clear();
             mMap.addMarker(new MarkerOptions().position(userLocation).title("me").icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_s)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12)); //between 1 and 20
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15)); //between 1 and 20
 
-
+            String apikey = mContext.getString(R.string.google_maps_key);
 
             GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces(new OnNearbyPlacesReadyCallback() {
                 @Override
@@ -179,7 +179,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(service.getCurrentLocation(), zoomValue)); //between 1 and 20
                 }
             });
-            getNearbyPlaces.downloadNearbyRestaurants();
+            getNearbyPlaces.downloadNearbyRestaurants(apikey);
 
 
         } else {
@@ -205,9 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 0, 40, 100);
-            //layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            //layoutParams.setMargins(0, 0, 180, 180);
+            layoutParams.setMargins(0, 0, 50, 50);
         }
 
 
@@ -227,7 +225,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Toast.makeText(mContext, "Place: " + place.getName() + ", " + place.getId(), Toast.LENGTH_LONG).show();
                 LatLng userLocation = place.getLatLng();
                 Log.i("alex", "latlng selected: " + userLocation.toString());
+                service.setCurrentLocation(userLocation);
                 centerMapOnLocation(userLocation);
+
             }
 
             @Override
@@ -244,7 +244,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                //Log.i("alex", "last location retrieved");
+
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 Log.i("alex", "last location retrieved");
                 Log.i("alex", userLocation.toString());

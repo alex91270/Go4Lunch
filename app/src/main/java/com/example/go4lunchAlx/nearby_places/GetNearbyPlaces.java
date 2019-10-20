@@ -1,5 +1,7 @@
 package com.example.go4lunchAlx.nearby_places;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -32,7 +34,7 @@ public class GetNearbyPlaces {
     private static String result;
 
     private ListView mListView;
-    private static final String API_KEY = "AIzaSyAhwPQxQ6UU4V7VQ7IxYsvFa3WzoNJ2qDg";
+    //private static final String API_KEY = "AIzaSyAhwPQxQ6UU4V7VQ7IxYsvFa3WzoNJ2qDg";
 
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     //private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
@@ -46,7 +48,7 @@ public class GetNearbyPlaces {
         this.onNearbyPlacesReadyCallback = onNearbyPlacesReadyCallback;
     }
 
-    public void downloadNearbyRestaurants() {
+    public void downloadNearbyRestaurants(String API_KEY) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         result = "success";

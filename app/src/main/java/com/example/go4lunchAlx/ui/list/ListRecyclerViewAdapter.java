@@ -2,6 +2,8 @@ package com.example.go4lunchAlx.ui.list;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
+import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.models.Restaurant;
 
 import java.util.List;
@@ -24,6 +28,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
 
     private final List<Restaurant> mRestaurants;
     private Context mContext;
+    private static View.OnClickListener clickListener;
 
     public ListRecyclerViewAdapter(List<Restaurant> items) {
         mRestaurants = items;
@@ -66,7 +71,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         if(restaurant.getRating()==5) holder.mStar5.setVisibility(View.VISIBLE);
 
         if (restaurant.getPhoto() == "no_pic") {
-            holder.mRestaurantPhoto.setImageResource(R.drawable.resto_sign);
+            holder.mRestaurantPhoto.setImageResource(R.drawable.resto_sign150);
         } else {
             mContext = holder.mRestaurantPhoto.getContext();
             String apiKey = mContext.getString(R.string.google_maps_key);
@@ -80,6 +85,18 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
                     .into(holder.mRestaurantPhoto);
         }
 
+        holder.mLayoutRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra("id", restaurant.getId());
+                intent.putExtra("pictureRef", restaurant.getPhoto());
+                mContext.startActivity(intent);
+            }
+        });
+
+
+
     }
 
     @Override
@@ -87,7 +104,9 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         return mRestaurants.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.item_name)
         public TextView mRestaurantName;
@@ -101,6 +120,8 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         public TextView mRestaurantOpening;
         @BindView(R.id.item_photo)
         public ImageView mRestaurantPhoto;
+        @BindView(R.id.layout_restaurant)
+        public ConstraintLayout mLayoutRestaurant;
 
         @BindView(R.id.star1)
         public ImageView mStar1;
@@ -117,6 +138,8 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+
         }
+
     }
 }
