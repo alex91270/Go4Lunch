@@ -17,18 +17,22 @@ import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.service.RestApiService;
 
-public class ListFragment extends Fragment {
+public class ListViewFragment extends Fragment {
 
     private Context mContext;
     private RestApiService service = DI.getRestApiService();
     private RecyclerView mRecyclerView;
     private ListRecyclerViewAdapter myAdapter;
 
+    public static ListViewFragment newInstance() {
+        return (new ListViewFragment());
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
                 ViewModelProviders.of(this).get(ListViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_list, container, false);
+        View root = inflater.inflate(R.layout.fragment_list_view, container, false);
         mContext = this.getActivity();
         mRecyclerView = root.findViewById(R.id.list_restaurants);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));

@@ -18,14 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".nearby_places.testList"></activity>
-        <activity android:name=".TestActivity" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name=".main.MainActivity"
+            android:theme="@style/MainActTheme"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".detail.DetailActivity"

@@ -15,6 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Nom restaurant"
+        android:textColor="#424544"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:textColor="#424544"
         android:text="120m"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/item_name"
@@ -46,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textColor="#424544"
         android:text="Adresse"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_name" />
@@ -55,14 +58,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:textColor="#424544"
         android:text="(0)"
         app:layout_constraintBottom_toBottomOf="@+id/item_address"
         app:layout_constraintEnd_toStartOf="@+id/item_photo" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/toolbar_menu_icon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:textColor="#424544"
         app:layout_constraintBottom_toBottomOf="@+id/item_attendants"
         app:layout_constraintEnd_toStartOf="@+id/item_attendants"
         app:layout_constraintTop_toTopOf="@+id/item_attendants"
@@ -74,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textColor="#424544"
         android:text="Opening"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_address" />

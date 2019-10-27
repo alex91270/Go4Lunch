@@ -8,14 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.go4lunchAlx.MapsActivity;
-import com.example.go4lunchAlx.TestActivity;
 import com.example.go4lunchAlx.main.MainActivity;
 import com.example.go4lunchAlx.R;
 
-import com.example.go4lunchAlx.nearby_places.testList;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,11 +33,11 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
         constraintLayout = findViewById(R.id.signin_constraint_layout);
 
-        startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, MainActivity.class));
 
 
         //startActivity(new Intent(this, testList.class)); //marche ok !
-       //startSignInActivity();
+       startSignInActivity();
     }
 
     private void testUserLogued() {

@@ -43,25 +43,27 @@ public class GetNearbyPlaces {
     private static final String OUT_JSON = "/json?";
     private static final String LOG_TAG = "ListRest";
     private RestApiService service = DI.getRestApiService();
+    private LatLng location;
 
     public GetNearbyPlaces(OnNearbyPlacesReadyCallback onNearbyPlacesReadyCallback) {
         this.onNearbyPlacesReadyCallback = onNearbyPlacesReadyCallback;
     }
 
-    public void downloadNearbyRestaurants(String API_KEY) {
+    public void downloadNearbyRestaurants(String API_KEY, LatLng loc) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         result = "success";
+        location = loc;
 
         //LatLng loc1 = new LatLng(48, 2);
         //service.setCurrentLocation(loc1);
-        LatLng latLng = service.getCurrentLocation();
+        //LatLng latLng = service.getCurrentLocation();
 
-        Log.i("alex", "loc: " + latLng.toString());
+        Log.i("alex", "loc: " + location.toString());
 
 
-        Double lat = service.getCurrentLocation().latitude;
-        Double lng = service.getCurrentLocation().longitude;
+        Double lat = location.latitude;
+        Double lng = location.longitude;
 
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
@@ -134,11 +136,11 @@ public class GetNearbyPlaces {
         try {
             String latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
             String longitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            LatLng location = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+            LatLng restoLocation = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
             String reference = jsonObject.getString("reference");
             String name = jsonObject.getString("name");
             String vicinity = jsonObject.getString("vicinity");
-            int distance = calculateDistance(location, service.getCurrentLocation());
+            int distance = calculateDistance(restoLocation, location);
             String photo;
 
             try{
@@ -173,7 +175,7 @@ public class GetNearbyPlaces {
                     opening = "closed";
                 }
         }
-            return new Restaurant(reference, name, photo, location, rating, vicinity, opening, distance);
+            return new Restaurant(reference, name, photo, restoLocation, rating, vicinity, opening, distance);
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e(LOG_TAG, "Error processing JSON results", e);
