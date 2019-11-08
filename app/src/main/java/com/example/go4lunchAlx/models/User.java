@@ -1,38 +1,46 @@
 package com.example.go4lunchAlx.models;
-
 import androidx.annotation.Nullable;
-
-/**
- * Created by Philippe on 30/01/2018.
- */
 
 public class User {
 
     private String uid;
     private String username;
-    private Boolean isMentor;
     @Nullable private String urlPicture;
+    @Nullable private String selectedRestaurant;
+    @Nullable private long dateSelection;
 
     public User() { }
 
-    public User(String uid, String username, String urlPicture) {
+    public User(String uid, String username, String urlPicture, String selectedRestaurant, long dateSelection) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
-        this.isMentor = false;
-
-
+        this.selectedRestaurant = selectedRestaurant;
+        this.dateSelection = dateSelection;
     }
 
     // --- GETTERS ---
     public String getUid() { return uid; }
     public String getUsername() { return username; }
     public String getUrlPicture() { return urlPicture; }
-    public Boolean getIsMentor() { return isMentor; }
+    public String getSelectedRestaurant() { return selectedRestaurant; }
+    public Long getDateSelection() { return dateSelection;}
 
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
     public void setUid(String uid) { this.uid = uid; }
     public void setUrlPicture(String urlPicture) { this.urlPicture = urlPicture; }
-    public void setIsMentor(Boolean mentor) { isMentor = mentor; }
+    public void setSelectedRestaurant(String restaurantID) { this.selectedRestaurant = restaurantID; }
+    public void setDateSelection(Long dateSelection) { this.dateSelection = dateSelection;}
+
+    @Override
+    public boolean equals(Object o) {
+        User user = (User) o;
+        if (uid.equals(user.getUid())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+

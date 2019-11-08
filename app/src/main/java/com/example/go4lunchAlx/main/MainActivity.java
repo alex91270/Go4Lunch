@@ -1,29 +1,38 @@
 package com.example.go4lunchAlx.main;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.go4lunchAlx.R;
+import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.signin.SigninActivity;
 import com.example.go4lunchAlx.ui.list.ListViewFragment;
 import com.example.go4lunchAlx.ui.map.MapViewFragment;
 import com.example.go4lunchAlx.ui.mates.MatesViewFragment;
 import com.example.go4lunchAlx.ui.settings.SettingsFragment;
 import com.example.go4lunchAlx.ui.yourlunch.YourLunchFragment;
+import com.example.go4lunchAlx.viewmodel.DataViewModel;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -48,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int FRAGMENT_LISTVIEW = 3;
     private static final int FRAGMENT_MATESVIEW = 4;
 
+    //private DataViewModel dataViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +70,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureNavigationView();
         configureBottomView();
         showFirstFragment();
+
+
+        /**dataViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+        dataViewModel.getRestoList().observe(this, new Observer<List<Restaurant>>() {
+            public void onChanged(@Nullable List<Restaurant> restos) {
+                Log.i("alex", "change observed, list size: " + restos.size());
+            }
+        });
+         */
+
+
     }
 
     @Override

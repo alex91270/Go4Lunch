@@ -1,9 +1,8 @@
 package com.example.go4lunchAlx.models;
 
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.maps.model.LatLng;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,10 @@ public class Restaurant {
     private String photo;
     private int distance;
 
-    public Restaurant() { }
+    public Restaurant(String id, List<String> attendants) {
+        this.id = id;
+        this.attendants = attendants;
+    }
 
     public Restaurant(String id, String name, String photo, LatLng location, double rating, String vicinity, String opening, int distance) {
         this.id = id;
@@ -61,4 +63,15 @@ public class Restaurant {
     public double getRating() {return rating;}
 
     public String getOpening() {return opening;}
+
+    @Override
+    public boolean equals(Object o) {
+        Restaurant resto = (Restaurant) o;
+        if (id.equals(resto.getId())) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

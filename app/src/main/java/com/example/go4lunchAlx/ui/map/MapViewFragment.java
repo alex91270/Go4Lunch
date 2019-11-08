@@ -15,13 +15,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.go4lunchAlx.R;
+import com.example.go4lunchAlx.TestActivity;
+import com.example.go4lunchAlx.data.GetDatas;
 import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
+import com.example.go4lunchAlx.data.firebase_data.OnFirebaseDataReadyCallback;
 import com.example.go4lunchAlx.models.Restaurant;
-import com.example.go4lunchAlx.nearby_places.GetNearbyPlaces;
-import com.example.go4lunchAlx.nearby_places.OnNearbyPlacesReadyCallback;
+import com.example.go4lunchAlx.data.nearby_places.GetNearbyPlaces;
+import com.example.go4lunchAlx.data.nearby_places.OnNearbyPlacesReadyCallback;
 import com.example.go4lunchAlx.service.RestApiService;
+import com.example.go4lunchAlx.viewmodel.DataViewModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -43,16 +50,20 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private Context mContext;
-    private PlacesClient mPlacesClient;
+    //private PlacesClient mPlacesClient;
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private FusedLocationProviderClient mFusedLocation;
     private RestApiService service = DI.getRestApiService();
     private View mapView;
+    private static String apiKey;
+    private GetDatas getDatas;
+    private LatLng selectedLocation;
 
     public static MapViewFragment newInstance() {
         return (new MapViewFragment());
@@ -64,18 +75,35 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
         Log.i("alex", "on create view");
         mContext = this.getActivity();
+        apiKey = mContext.getString(R.string.google_maps_key);
 
         if (!Places.isInitialized()) {
-            Places.initialize(mContext, "AIzaSyAhwPQxQ6UU4V7VQ7IxYsvFa3WzoNJ2qDg");
+            Places.initialize(mContext, apiKey);
         }
         Log.i("alex", "Places initialized: " + String.valueOf(Places.isInitialized()));
 
-        mPlacesClient = Places.createClient(mContext);
+        //mPlacesClient = Places.createClient(mContext);
+
+
+
+
+
+        DataViewModel dataViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+        Log.i("alex", "viewmodel of fragment is; " + dataViewModel);
+        dataViewModel.getRestoList().observe(this, new Observer<List<Restaurant>>() {
+            public void onChanged(@Nullable List<Restaurant> restos) {
+                Log.i("alex", "change observed, list size: " + service.getAllRestaurants().size());
+                if (service.getAllRestaurants().size() > 0) placeMarkers();
+            }
+        });
+
+        getDatas = new GetDatas(dataViewModel);
+
+
+
+
 
         View root = inflater.inflate(R.layout.fragment_map_view, container, false);
-
-        //LatLng loc1 = new LatLng(48, 2);
-        //service.setCurrentLocation(loc1);
 
         return root;
     }
@@ -86,7 +114,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         Log.i("alex", "on view created");
         getMap();
     }
-
 
 
     @SuppressWarnings({"MissingPermission"})
@@ -107,62 +134,23 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 Log.i("alex", "location changed: " + location.toString());
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 service.setCurrentLocation(userLocation);
+                selectedLocation = userLocation;
 
-                centerMapOnLocation(userLocation);
-
+                getDatas.process(mContext, userLocation, apiKey);
+                //centerMapOnLocation(userLocation);
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-
             }
-
             @Override
             public void onProviderEnabled(String provider) {
-
             }
-
             @Override
             public void onProviderDisabled(String provider) {
-
             }
         };
         Log.i("alex", "location manager setup");
         locationManager.requestLocationUpdates("gps", 1000, 50, locationListener);
-    }
-
-    public void centerMapOnLocation(LatLng userLocation) {
-
-        if (userLocation != null) {
-            Log.i("alex", "centering location");
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(userLocation).title("me").icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_s)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15)); //between 1 and 20
-
-            String apikey = mContext.getString(R.string.google_maps_key);
-
-            GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces(new OnNearbyPlacesReadyCallback() {
-                @Override
-                public void OnNearbyPlacesReady(String result) {
-                    Log.i("alex", "le download est fini et result: " + result);
-                    Log.i("alex", "number of restaurants: " + service.getAllRestaurants().size());
-                    int maxDistance = 0;
-                    for(Restaurant r : service.getAllRestaurants()) {
-                        if(r.getDistance()>maxDistance) maxDistance = r.getDistance();
-                        Log.i("alex", "add marker: " + r.getName() + " " + r.getLocation());
-                        mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_green_s)));
-                    }
-                    int zoomValue = 24-((int)(Math.log(maxDistance) / Math.log(2)));
-                    Log.i("alex", "max distance: " + maxDistance);
-                    Log.i("alex", "zoom value: " + zoomValue);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, zoomValue)); //between 1 and 20
-                }
-            });
-            getNearbyPlaces.downloadNearbyRestaurants(apikey, userLocation);
-
-        } else {
-            Log.i("alex", "no location");
-        }
     }
 
     @Override
@@ -179,7 +167,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                centerMapOnLocation(service.getCurrentLocation());
+                getDatas.process(mContext, service.getCurrentLocation(), apiKey);
                 return true;
             }
         });
@@ -189,7 +177,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 0, 50, 80);
+            layoutParams.setMargins(0, 0, 50, 110);
         }
 
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -204,8 +192,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             public void onPlaceSelected(@NonNull Place place) {
                 Toast.makeText(mContext, "Place: " + place.getName() + ", " + place.getId(), Toast.LENGTH_LONG).show();
                 LatLng userLocation = place.getLatLng();
-                Log.i("alex", "latlng selected: " + userLocation.toString());
-                centerMapOnLocation(userLocation);
+                //Log.i("alex", "latlng selected: " + userLocation.toString());
+                selectedLocation = userLocation;
+                getDatas.process(mContext, userLocation, apiKey);
             }
 
             @Override
@@ -223,13 +212,24 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                 Log.i("alex", "last location retrieved");
                 Log.i("alex", userLocation.toString());
                 service.setCurrentLocation(userLocation);
-                centerMapOnLocation(userLocation);
+                selectedLocation = userLocation;
+                getDatas.process(mContext, userLocation, apiKey);
             }
         });
     }
 
+    public void placeMarkers() {
+        mMap.clear();
 
-
-
-
+        int maxDistance = 0;
+        for(Restaurant r : service.getAllRestaurants()) {
+            if(r.getDistance()>maxDistance) maxDistance = r.getDistance();
+            //Log.i("alex", "add marker: " + r.getName() + " " + r.getId());
+            mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_green_s)));
+        }
+        int zoomValue = 24-((int)(Math.log(maxDistance) / Math.log(2)));
+        Log.i("alex", "max distance: " + maxDistance);
+        Log.i("alex", "zoom value: " + zoomValue);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, zoomValue)); //between 1 and 20
+    }
 }

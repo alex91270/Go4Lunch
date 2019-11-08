@@ -18,14 +18,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".TestActivity"></activity>
         <activity
             android:name=".main.MainActivity"
-            android:theme="@style/MainActTheme"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main"
+            android:theme="@style/MainActTheme" />
         <activity
             android:name=".detail.DetailActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".signin.SigninActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

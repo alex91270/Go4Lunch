@@ -3,6 +3,7 @@ package com.example.go4lunchAlx.ui.list;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.detail.DetailActivity;
+
+import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.Restaurant;
+import com.example.go4lunchAlx.service.RestApiService;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.List;
 import butterknife.BindView;
@@ -29,6 +38,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private final List<Restaurant> mRestaurants;
     private Context mContext;
     private static View.OnClickListener clickListener;
+    private RestApiService service = DI.getRestApiService();
 
     public ListRecyclerViewAdapter(List<Restaurant> items) {
         mRestaurants = items;
@@ -64,13 +74,21 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         holder.mRestaurantAttendants.setText("(" + restaurant.getAttendants().size() + ")");
         holder.mRestaurantDistance.setText(restaurant.getDistance() + "m");
         holder.mRestaurantOpening.setText(restaurant.getOpening());
-        if(restaurant.getRating()>=1) holder.mStar1.setVisibility(View.VISIBLE);
-        if(restaurant.getRating()>=2) holder.mStar2.setVisibility(View.VISIBLE);
-        if(restaurant.getRating()>=3) holder.mStar3.setVisibility(View.VISIBLE);
-        if(restaurant.getRating()>=4) holder.mStar4.setVisibility(View.VISIBLE);
-        if(restaurant.getRating()==5) holder.mStar5.setVisibility(View.VISIBLE);
 
-        if (restaurant.getPhoto() == "no_pic") {
+        //int rate = getRate(restaurant);
+        //int yellowsize = ((int)(Math.round(rate*0.2*holder.mStars.getLayoutParams().width)));
+
+        holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
+
+        Log.i("alex", "size of yellow should be: " + ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))));
+
+        //holder.yellowBackground.getLayoutParams().width = yellowsize;
+        //Log.i("alex", "rate of restaurant " + restaurant.getName() + " is: " + rate);
+        //holder.yellowBackground.getLayoutParams().width = (int) Math.round(holder.mStars.getLayoutParams().width) * (0.2) * getRate(restaurant)) ;
+
+        //Log.i("alex", "taille des etoiles: " + holder.mStars.getLayoutParams().width);
+
+        if (restaurant.getPhoto() == null) {
             holder.mRestaurantPhoto.setImageResource(R.drawable.resto_sign150);
         } else {
             mContext = holder.mRestaurantPhoto.getContext();
@@ -89,12 +107,10 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("id", restaurant.getId());
-                intent.putExtra("pictureRef", restaurant.getPhoto());
+                intent.putExtra("restoId", restaurant.getId());
                 mContext.startActivity(intent);
             }
         });
-
 
 
     }
@@ -105,8 +121,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     }
 
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.item_name)
         public TextView mRestaurantName;
@@ -123,16 +138,10 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         @BindView(R.id.layout_restaurant)
         public ConstraintLayout mLayoutRestaurant;
 
-        @BindView(R.id.star1)
-        public ImageView mStar1;
-        @BindView(R.id.star2)
-        public ImageView mStar2;
-        @BindView(R.id.star3)
-        public ImageView mStar3;
-        @BindView(R.id.star4)
-        public ImageView mStar4;
-        @BindView(R.id.star5)
-        public ImageView mStar5;
+        @BindView(R.id.stars)
+        public ImageView mStars;
+        @BindView(R.id.yellowBackground)
+        public ImageView yellowBackground;
 
 
         public ViewHolder(View view) {
@@ -141,5 +150,21 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
 
         }
 
+    }
+
+    private int getRate(Restaurant restaurant) {
+        int numberRates = 0;
+        int totalRate = 0;
+        for (Rating rating : service.getListOfRatings()) {
+            if (rating.getRestaurantID().equals(restaurant.getId())){
+                totalRate+=rating.getRate();
+                numberRates+=1;
+            }
+        }
+        if (totalRate > 0) {
+            return totalRate / numberRates;
+        } else {
+            return 0;
+        }
     }
 }

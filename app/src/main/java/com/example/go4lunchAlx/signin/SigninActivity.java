@@ -8,9 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.go4lunchAlx.TestActivity;
+import com.example.go4lunchAlx.api.RatingsHelper;
+import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.main.MainActivity;
 import com.example.go4lunchAlx.R;
 
+import com.example.go4lunchAlx.models.User;
+import com.example.go4lunchAlx.service.RestApiService;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,12 +25,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.example.go4lunchAlx.api.UserHelper;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class SigninActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
     private ConstraintLayout constraintLayout;
+    private RestApiService service = DI.getRestApiService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +40,14 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
         constraintLayout = findViewById(R.id.signin_constraint_layout);
 
+        /**Date date = new Date();
+        Long dateLong = date.getTime();
+        Log.i("alex", "date du jour: " + dateLong);
+         */
+
         //startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, TestActivity.class));
 
-
-        //startActivity(new Intent(this, testList.class)); //marche ok !
        startSignInActivity();
     }
 
@@ -98,6 +109,7 @@ public class SigninActivity extends AppCompatActivity {
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
+
                 this.createUserInFirestore();
                 showSnackBar(this.constraintLayout, getString(R.string.connection_succeed));
                 Intent intent = new Intent(this, MainActivity.class);
@@ -117,7 +129,6 @@ public class SigninActivity extends AppCompatActivity {
                 }
                  */
             }
-
         }
     }
 
@@ -129,7 +140,9 @@ public class SigninActivity extends AppCompatActivity {
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
 
-            Log.i("alex", "username: " + username);
+            service.setCurrentUserId(uid);
+
+            Log.i("alex", "signin act create user");
 
             UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
         }

@@ -1,14 +1,14 @@
 package com.example.go4lunchAlx.api;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.go4lunchAlx.models.User;
 
-/**
- * Created by Philippe on 30/01/2018.
- */
+import java.util.Date;
 
 public class UserHelper {
 
@@ -24,7 +24,9 @@ public class UserHelper {
 
     public static Task<Void> createUser(String uid, String username, String urlPicture) {
         // 1 - Create Obj
-        User userToCreate = new User(uid, username, urlPicture);
+        User userToCreate = new User(uid, username, urlPicture, "restaurant", 1);
+        Log.i("alex", "userhelper create user");
+        Log.i("alex", "new user selected rest: " + userToCreate.getSelectedRestaurant());
 
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
@@ -41,14 +43,18 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("username", username);
     }
 
-    public static Task<Void> updateIsMentor(String uid, Boolean isMentor) {
-        return UserHelper.getUsersCollection().document(uid).update("isMentor", isMentor);
-    }
-
     // --- DELETE ---
 
     public static Task<Void> deleteUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).delete();
+    }
+
+    // --- UPDATE ---
+
+    public static Task<Void> updateSelectedRestaurant(String uid, String selectedRestaurant) {
+        return UserHelper.getUsersCollection().document(uid).update
+                ("selectedRestaurant", selectedRestaurant,
+                        "dateSelection", new Date().getTime());
     }
 
 }

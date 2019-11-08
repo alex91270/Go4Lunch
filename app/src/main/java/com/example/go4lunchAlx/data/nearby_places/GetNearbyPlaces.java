@@ -1,16 +1,9 @@
-package com.example.go4lunchAlx.nearby_places;
+package com.example.go4lunchAlx.data.nearby_places;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
@@ -26,7 +19,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class GetNearbyPlaces {
 
@@ -59,7 +51,7 @@ public class GetNearbyPlaces {
         //service.setCurrentLocation(loc1);
         //LatLng latLng = service.getCurrentLocation();
 
-        Log.i("alex", "loc: " + location.toString());
+        //Log.i("alex", "loc: " + location.toString());
 
 
         Double lat = location.latitude;
@@ -117,9 +109,11 @@ public class GetNearbyPlaces {
             service.clearNearbyRestaurants();
 
             for (int i = 0; i < predsJsonArray.length(); i++) {
+                //Log.i("alex", "place found");
 
                 JSONObject jsonObject = predsJsonArray.getJSONObject(i);
                 Restaurant resto = buildRestaurantFromJson(jsonObject);
+                //Log.i("alex", "resto found: " + resto.getId());
                 service.addNearbyRestaurant(resto);
             }
             Log.i("alex", "list size: " + String.valueOf(service.getAllRestaurants().size()));
@@ -141,6 +135,8 @@ public class GetNearbyPlaces {
             String name = jsonObject.getString("name");
             String vicinity = jsonObject.getString("vicinity");
             int distance = calculateDistance(restoLocation, location);
+
+            //Log.i("alex", "resto name: " + name + " id: " + reference);
             String photo;
 
             try{
@@ -175,7 +171,8 @@ public class GetNearbyPlaces {
                     opening = "closed";
                 }
         }
-            return new Restaurant(reference, name, photo, restoLocation, rating, vicinity, opening, distance);
+            //return new Restaurant(reference, name, photo, restoLocation, rating, vicinity, opening, distance);
+            return new Restaurant(reference);
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e(LOG_TAG, "Error processing JSON results", e);
@@ -204,8 +201,8 @@ public class GetNearbyPlaces {
         int kmInDec = Integer.valueOf(newFormat.format(km));
         double meter = valueResult % 1000;
         int meterInDec = Integer.valueOf(newFormat.format(meter));
-        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
-                + " Meter   " + meterInDec);
+        //Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+          //      + " Meter   " + meterInDec);
 
         return (int) Math.floor(Radius * c * 1000);
     }

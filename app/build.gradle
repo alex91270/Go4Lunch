@@ -76,5 +76,9 @@ dependencies {
     // FACEBOOK LOGIN SUPPORT
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+
 }
 apply plugin: 'com.google.gms.google-services'
