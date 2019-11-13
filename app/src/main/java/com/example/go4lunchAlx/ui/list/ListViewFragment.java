@@ -2,6 +2,7 @@ package com.example.go4lunchAlx.ui.list;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +32,24 @@ public class ListViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-                ViewModelProviders.of(this).get(ListViewModel.class);
         View root = inflater.inflate(R.layout.fragment_list_view, container, false);
         mContext = this.getActivity();
         mRecyclerView = root.findViewById(R.id.list_restaurants);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        myAdapter = new ListRecyclerViewAdapter(service.getAllRestaurants());
+        myAdapter = new ListRecyclerViewAdapter(service.getRestaurants());
         mRecyclerView.setAdapter(myAdapter);
 
         return root;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("alex", "listview onresume");
+        if (myAdapter != null) {
+            mRecyclerView.setAdapter(myAdapter);
+        }
+    }
 }

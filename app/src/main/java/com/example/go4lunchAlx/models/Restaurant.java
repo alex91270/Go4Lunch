@@ -19,6 +19,11 @@ public class Restaurant {
     private String photo;
     private int distance;
 
+    public Restaurant(String id) {
+        this.id = id;
+        this.attendants = new ArrayList<>();
+    }
+
     public Restaurant(String id, List<String> attendants) {
         this.id = id;
         this.attendants = attendants;
@@ -38,19 +43,35 @@ public class Restaurant {
 
     public String getId() {return id;}
 
-    public LatLng getLocation() {
-        return location;
-    }
-
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
+    }
+
     public String getPhoto() {return photo;}
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public List<String> getAttendants() {return attendants;}
 
     public void addAttendant(String name){attendants.add(name);}
+
+    public void deleteAttendant(String name) {
+        attendants.remove(name);
+    }
 
     public void clearAttendants() {attendants.clear();}
 
@@ -58,11 +79,31 @@ public class Restaurant {
         return distance;
     }
 
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
     public String getVicinity() {return vicinity;}
+
+    public void setVicinity(String vicinity) {
+        this.vicinity = vicinity;
+    }
 
     public double getRating() {return rating;}
 
+    public void setRating(double rating){
+        this.rating = rating;
+    }
+
     public String getOpening() {return opening;}
+
+    public void setOpening(String opening) {
+        this.opening = opening;
+    }
+
+    public void setAttendants(ArrayList<String> attendants) {
+        this.attendants = attendants;
+    }
 
     @Override
     public boolean equals(Object o) {

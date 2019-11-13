@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.service.RestApiService;
-import com.example.go4lunchAlx.ui.list.ListRecyclerViewAdapter;
-import com.example.go4lunchAlx.ui.list.ListViewModel;
 
 public class MatesViewFragment extends Fragment {
 
@@ -31,7 +29,7 @@ public class MatesViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewModelProviders.of(this).get(ListViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_mates_view, container, false);
         mContext = this.getActivity();
         mRecyclerView = root.findViewById(R.id.list_workmates);

@@ -55,7 +55,7 @@ public interface ApiService {
      * Get all the known restaurants
      * @return {@link List}
      */
-    List<Restaurant> getAllRestaurants();
+    List<Restaurant> getRestaurants();
 
     /**
      * Get a specific restaurant by it's id
@@ -67,47 +67,49 @@ public interface ApiService {
      * Adds a restaurant to the list of all restaurants
      * @param restaurant
      */
-    void addRestaurantToAll(Restaurant restaurant);
+    void addRestaurant(Restaurant restaurant);
 
     /**
      * Sets the list of all restaurants
      * @param allRestaurantsList
      */
-    void setAllRestaurantsList(List<Restaurant> allRestaurantsList);
+    void setRestaurantsList(List<Restaurant> allRestaurantsList);
 
     /**
      * Clears the list of all restaurants
      */
-    void clearAllRestaurants();
+    void clearRestaurants();
+
+    void updateRestaurant(Restaurant restaurant);
 
     /**
      * Adds a restaurant to the list of restaurants already chosen by users
      * @param restaurant
      */
-    void addFirestoreRestaurant(Restaurant restaurant);
+    //void addFirestoreRestaurant(Restaurant restaurant);
 
     /**
      * Clears the list of restaurants already chosen by users
      */
-    void clearFirestoreRestaurants();
+    //void clearFirestoreRestaurants();
 
 
     /**
      * Get the list of restaurants found nearby
      * @return {@link Restaurant}
      */
-    List<Restaurant> getNearbyRestaurants();
+    //List<Restaurant> getNearbyRestaurants();
 
     /**
      * Adds a restaurant to the list of restaurants found nearby the current location
      * @param restaurant
      */
-    void addNearbyRestaurant(Restaurant restaurant);
+    //void addNearbyRestaurant(Restaurant restaurant);
 
     /**
      * Clears the list of restaurants found nearby the current location
      */
-    void clearNearbyRestaurants();
+    //void clearNearbyRestaurants();
 
     /**
      * Get the last current location
@@ -141,6 +143,9 @@ public interface ApiService {
      */
    void clearListOfRatings();
 
+
+    void updateRating(Rating rating);
+
     /**
      * Adds an attendant to a specific restaurant
      * @param restoId
@@ -148,4 +153,11 @@ public interface ApiService {
      */
     void addAttendantToRestaurant(String restoId, String attendantId);
 
+    void removeAttendantFromRestaurant(String attendantId, String restoId);
+
+    User getUserById(String id);
+
+    void setUserSelectedRestaurant(String userId, String selectedRestaurant);
+
+    String getRestaurantIdByName(String name);
 }

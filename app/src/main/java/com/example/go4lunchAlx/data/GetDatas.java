@@ -54,9 +54,10 @@ public class GetDatas {
 
     public void process(Context mContext, LatLng location, String apiKey) {
         this.mContext = mContext;
+        mPlacesClient = Places.createClient(mContext);
 
-        service.clearAllRestaurants();
-
+        service.clearRestaurants();
+        Log.i("alex", "get data process");
         getNearbyPlacesData(location, apiKey);
     }
 
@@ -66,8 +67,8 @@ public class GetDatas {
         GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces(new OnNearbyPlacesReadyCallback() {
             @Override
             public void OnNearbyPlacesReady(String result) {
-                Log.i("alex", "le download  de place est fini et result: " + result);
-                Log.i("alex", "number of restaurants nearby: " + service.getNearbyRestaurants().size());
+                //Log.i("alex", "le download  de place est fini et result: " + result);
+                //Log.i("alex", "number of restaurants nearby: " + service.getNearbyRestaurants().size());
 
                 getFirebaseData(location);
             }
@@ -80,10 +81,10 @@ public class GetDatas {
             GetFirebaseData getFirebaseData = new GetFirebaseData(new OnFirebaseDataReadyCallback() {
                 @Override
                 public void onFirebaseDataReady(String result) {
-                    Log.i("alex", "le download  de firebase est fini et result: " + result);
-                    Log.i("alex", "call back after firebase in map fragment");
-                    Log.i("alex", "userlist size: " + service.getFirebaseUsers().size());
-                    Log.i("alex", "ratinglist size: " + service.getListOfRatings().size());
+                   // Log.i("alex", "le download  de firebase est fini et result: " + result);
+                    //Log.i("alex", "call back after firebase in map fragment");
+                    //Log.i("alex", "userlist size: " + service.getFirebaseUsers().size());
+                   // Log.i("alex", "ratinglist size: " + service.getListOfRatings().size());
 
                     mergeDatas();
                 }
@@ -94,30 +95,38 @@ public class GetDatas {
 
     public void mergeDatas() {
 
-        AllRestaurantsWithIdOnly = new ArrayList<>();
+        //AllRestaurantsWithIdOnly = new ArrayList<>();
 
-        AllRestaurantsWithIdOnly.addAll(service.getNearbyRestaurants());
+        //AllRestaurantsWithIdOnly.addAll(service.getNearbyRestaurants());
 
         Restaurant selectedRestaurant;
         ArrayList<String> attendants = new ArrayList<>();
 
+
+
         for (User user: service.getFirebaseUsers()) {
+            attendants.clear();
+            Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
             if (user.getDateSelection()!= null && getToday().equals(getDayFromLong(user.getDateSelection()))) {
-                Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
-                if (user.getSelectedRestaurant()!=null) {
+                //Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
+                Log.i("alex", "today selection found");
+                if (user.getSelectedRestaurant()!= null) {
+                    Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
                     attendants.add(user.getUid());
                     selectedRestaurant = new Restaurant(user.getSelectedRestaurant(), attendants);
-                    if (!AllRestaurantsWithIdOnly.contains(selectedRestaurant)) {
-                        AllRestaurantsWithIdOnly.add(selectedRestaurant);
+                    if (!service.getRestaurants().contains(selectedRestaurant)) {
+                        service.addRestaurant(selectedRestaurant);
                     } else {
-                       service.addAttendantToRestaurant(user.getSelectedRestaurant(), user.getUid());
-                    }
+                        Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
+                        Log.i("alex", "user who selected: " + user.getUid());
+
+                        service.addAttendantToRestaurant(user.getSelectedRestaurant(), user.getUid());                    }
                 }
             }
         }
 
-        for(Restaurant resto : AllRestaurantsWithIdOnly) {
-           fetchRestaurant(resto);
+        for(Restaurant resto : service.getRestaurants()) {
+           fetchRestaurantInfos(resto.getId());
         }
 
 
@@ -128,22 +137,12 @@ public class GetDatas {
 
     }
 
-    public String getDayFromLong(Long dateLong) {
-        Date date = new Date(dateLong);
-        //Calendar cal = Calendar.getInstance();
-        //cal.setTime(date);
-        String simpleDate = ft.format(date);
-        return simpleDate;
-    }
 
-    public String getToday() {
-        Date date = new Date();
-        String simpleDate = ft.format(date);
-        return simpleDate;
-    }
 
-    public  void fetchRestaurant(Restaurant resto) {
+    public  void fetchRestaurantInfos(String restoId) {
         //Log.i("alex", "inside fetch");
+
+        Restaurant resto = service.getRestaurantById(restoId);
 
 
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.OPENING_HOURS);
@@ -151,50 +150,65 @@ public class GetDatas {
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(resto.getId(), placeFields);
         //Log.i("alex", "request: " + request);
 
-        mPlacesClient = Places.createClient(mContext);
+
 
         mPlacesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
 
-            String name = place.getName();
-            String vicinity = place.getAddress();
+
+            //String name = place.getName();
+            resto.setName(place.getName());
+
+            //String vicinity = place.getAddress();
+            resto.setVicinity(place.getAddress());
+
             LatLng location = place.getLatLng();
+
             //Log.i("alex", "resto id: " + resto.getId() + "  location: " + location);
+            resto.setLocation(place.getLatLng());
 
 
             String photoRef = "no_pic";
             if (place.getPhotoMetadatas() != null){
-                //photoRef = place.getPhotoMetadatas().get(0);
                 String photoString = place.getPhotoMetadatas().get(0).toString();
                 photoRef = photoString.substring(
                                 photoString.indexOf("photoReference=")+15, photoString.length()-1);
 
-                Log.i("alex", "photo full string is: " + photoString);
-                Log.i("alex", "photo splitetd string is: " + photoRef);
+                //Log.i("alex", "photo full string is: " + photoString);
+                //Log.i("alex", "photo splitetd string is: " + photoRef);
             }
+            resto.setPhoto(photoRef);
+
             String opening = "No opening hours";
             if (place.getOpeningHours() != null){
                 opening = place.getOpeningHours().toString();
             }
-            int distance = calculateDistance(service.getCurrentLocation(), location);
+            resto.setOpening(opening);
 
-            Restaurant restaurantToadd = new Restaurant(resto.getId(), name, photoRef, location,0,vicinity,opening,distance );
+            int distance = calculateDistance(service.getCurrentLocation(), location);
+            resto.setDistance(distance);
+
+            if (resto.getAttendants()==null) resto.setAttendants(new ArrayList<>());
+
+            service.updateRestaurant(resto);
+
+            //Restaurant restaurantToadd = new Restaurant(resto.getId(), name, photoRef, location,0,vicinity,opening,distance );
             //allRestaurantsWithInfo.add(restaurantToadd);
-            Log.i("alex", "adding resto from fetch");
+            //Log.i("alex", "adding resto from fetch");
 
 
             //***********
-            if (!service.getAllRestaurants().contains(restaurantToadd)) {
-                service.getAllRestaurants().add(restaurantToadd);
-                }
+            //if (!service.getAllRestaurants().contains(restaurantToadd)) {
+               // service.getAllRestaurants().add(restaurantToadd);
+               // }
             //service.addRestaurantToAll(restaurantToadd);
             //dataViewModel.updateViewModel();
 
-            if (place.getId().equals(AllRestaurantsWithIdOnly.get(AllRestaurantsWithIdOnly.size()-1).getId())) {
-                Log.i("alex", "finished fetching last resto");
-                Log.i("alex", "list restaurantwithId size: " + AllRestaurantsWithIdOnly.size());
-                Log.i("alex", "list restaurantwithinfo size: " + allRestaurantsWithInfo.size());
-                Log.i("alex", "list restaurant of service size: " + service.getAllRestaurants().size());
+            if (place.getId().equals(service.getRestaurants().get(service.getRestaurants().size()-1).getId())) {
+                //Log.i("alex", "finished fetching last resto");
+                //Log.i("alex", "list restaurantwithId size: " + AllRestaurantsWithIdOnly.size());
+                //Log.i("alex", "list restaurantwithinfo size: " + allRestaurantsWithInfo.size());
+                //Log.i("alex", "list restaurant of service size: " + service.getAllRestaurants().size());
                 dataViewModel.updateViewModel();
             }
         }).addOnFailureListener((exception) -> {
@@ -202,7 +216,7 @@ public class GetDatas {
                 ApiException apiException = (ApiException) exception;
                 int statusCode = apiException.getStatusCode();
                 // Handle error with given status code.
-                Log.e("alex", "Place not found: " + exception.getMessage());
+               // Log.e("alex", "Place not found: " + exception.getMessage());
             }
         });
     }
@@ -231,5 +245,19 @@ public class GetDatas {
         //        + " Meter   " + meterInDec);
 
         return (int) Math.floor(Radius * c * 1000);
+    }
+
+    public String getDayFromLong(Long dateLong) {
+        Date date = new Date(dateLong);
+        //Calendar cal = Calendar.getInstance();
+        //cal.setTime(date);
+        String simpleDate = ft.format(date);
+        return simpleDate;
+    }
+
+    public String getToday() {
+        Date date = new Date();
+        String simpleDate = ft.format(date);
+        return simpleDate;
     }
 }

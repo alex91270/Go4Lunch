@@ -12,12 +12,12 @@ import java.util.List;
 public class RestApiService implements ApiService {
 
     private List<User> firebaseUsers = new ArrayList<>();
-   private List<Restaurant> firestoreRestaurants = new ArrayList<>();
-    private List<Restaurant> nearbyRestaurants = new ArrayList<>();
+   //private List<Restaurant> firestoreRestaurants = new ArrayList<>();
+    //private List<Restaurant> nearbyRestaurants = new ArrayList<>();
     private User currentUser = null;
     private LatLng currentLocation;
     private List<Rating> listOfRatings = new ArrayList<>();
-    private List<Restaurant> allRestaurants = new ArrayList<>();
+    private List<Restaurant> restaurants = new ArrayList<>();
     private String currentUserId = null;
 
 
@@ -43,18 +43,30 @@ public class RestApiService implements ApiService {
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
+    public User getUserById(String id){
+        for (User user : firebaseUsers) {
+            if (user.getUid().equals(id)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
+    @Override
+    public void setUserSelectedRestaurant(String userId, String selectedRestaurant) {
+        getUserById(userId).setSelectedRestaurant(selectedRestaurant);
+    }
 
+    @Override
+    public List<Restaurant> getRestaurants() {
        //allRestaurants.addAll(firestoreRestaurants);
         //allRestaurants.addAll(nearbyRestaurants);
-
-        return allRestaurants;
+        return restaurants;
     }
 
     @Override
     public Restaurant getRestaurantById(String id){
-        for (Restaurant restaurant : allRestaurants) {
+        for (Restaurant restaurant : restaurants) {
             if ( restaurant.getId().equals(id)) {
                 return restaurant;
             }
@@ -63,24 +75,40 @@ public class RestApiService implements ApiService {
     }
 
     @Override
-    public void setAllRestaurantsList(List<Restaurant> allRestaurantsList) {
-        allRestaurants = allRestaurantsList;
+    public String getRestaurantIdByName(String name) {
+        for (Restaurant restaurant : restaurants) {
+            if ( restaurant.getName().equals(name)) {
+                return restaurant.getId();
+            }
+        }
+        return null;
     }
 
     @Override
-    public void addRestaurantToAll(Restaurant restaurant) {
-        allRestaurants.add(restaurant);
+    public void setRestaurantsList(List<Restaurant> RestaurantsList) {
+        restaurants = RestaurantsList;
     }
 
     @Override
-    public void clearAllRestaurants() {
-        allRestaurants.clear();
+    public void addRestaurant(Restaurant restaurant) {
+        restaurants.add(restaurant);
     }
 
     @Override
+    public void updateRestaurant(Restaurant restaurant) {
+    restaurants.set(restaurants.indexOf(restaurant), restaurant);
+    }
+
+    @Override
+    public void clearRestaurants() {
+        restaurants.clear();
+    }
+
+    /**@Override
     public void addFirestoreRestaurant(Restaurant restaurant) {
         firestoreRestaurants.add(restaurant);
     }
+     */
 
     @Override
     public void addFirebaseUser(User user) {
@@ -93,25 +121,29 @@ public class RestApiService implements ApiService {
     @Override
     public List<User> getFirebaseUsers() {return firebaseUsers;}
 
-    @Override
+    /**@Override
     public void clearFirestoreRestaurants() {
         firestoreRestaurants.clear();
     }
+     */
 
-    @Override
+    /**@Override
     public void addNearbyRestaurant(Restaurant restaurant) {
         nearbyRestaurants.add(restaurant);
     }
+     */
 
-    @Override
+    /**@Override
     public List<Restaurant> getNearbyRestaurants() {
         return nearbyRestaurants;
     }
+     */
 
-    @Override
+    /**@Override
     public void clearNearbyRestaurants() {
         nearbyRestaurants.clear();
     }
+     */
 
     @Override
     public LatLng getCurrentLocation() {
@@ -130,13 +162,29 @@ public class RestApiService implements ApiService {
     public void addRating(Rating rating) { listOfRatings.add(rating);}
 
     @Override
+    public void updateRating(Rating rating) {
+        listOfRatings.set(listOfRatings.indexOf(rating), rating);
+    }
+
+    @Override
     public void clearListOfRatings() { listOfRatings.clear();}
 
     @Override
     public void addAttendantToRestaurant(String restoId, String attendantId) {
-        for (Restaurant restaurant : allRestaurants) {
+        for (Restaurant restaurant : restaurants) {
             if ( restaurant.getId().equals(restoId)) {
-                restaurant.addAttendant(attendantId);
+                if (!restaurant.getAttendants().contains(attendantId)) {
+                    restaurant.addAttendant(attendantId);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeAttendantFromRestaurant(String attendantId, String restoId) {
+        for (Restaurant restaurant : restaurants) {
+            if ( restaurant.getId().equals(restoId)) {
+                restaurant.deleteAttendant(attendantId);
             }
         }
     }

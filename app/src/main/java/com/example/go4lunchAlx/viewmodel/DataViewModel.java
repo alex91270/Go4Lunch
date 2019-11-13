@@ -27,7 +27,7 @@ public class DataViewModel extends ViewModel {
 
     public DataViewModel() {
        restoList = new MutableLiveData<>();
-        restoList.setValue(service.getAllRestaurants());
+        restoList.setValue(service.getRestaurants());
     }
 
     public LiveData<List<Restaurant>> getRestoList() {
@@ -36,7 +36,7 @@ public class DataViewModel extends ViewModel {
 
 
     public void updateViewModel() {
-        restoList.setValue(service.getAllRestaurants());
+        restoList.setValue(service.getRestaurants());
         Log.i("alex", "updateViewModel");
     }
 }

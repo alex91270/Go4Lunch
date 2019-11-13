@@ -103,20 +103,35 @@ public class LikeDialogFragment extends DialogFragment {
             star5.setImageResource(R.drawable.star30yellow);
         });
         buttonRate.setOnClickListener((View v) -> {
+            Rating rating;
             if (rateGiven == 6) {
                 Toast.makeText(getContext(), "Pick up a number of stars", Toast.LENGTH_SHORT).show();
             } else {
                 String rid = service.getCurrentUserId() + restoId;
-                Rating rating = new Rating( rid, restoId, service.getCurrentUserId(), rateGiven );
+                rating = new Rating( rid, restoId, service.getCurrentUserId(), rateGiven );
                 if(service.getListOfRatings().contains(rating)) {
                     //update
                     Log.i("alex", "this ones exists. updating rating.");
+                    Log.i("alex", "resto id: " + restoId);
+                    Log.i("alex", "user ID: " + service.getCurrentUserId());
                     Rating oldRating = listOfRatings.get((listOfRatings.indexOf(rating)));
                     RatingsHelper.updateRate(rateGiven, oldRating.getrID());
+
+                    service.updateRating(rating);
+
+
+                    //TODO add locally
                 } else {
                     //create
                     Log.i("alex", "creating a new rating");
-                    RatingsHelper.createRating(rid, restoId, service.getCurrentUserId(), rateGiven).addOnFailureListener(onFailureListener());
+                    Log.i("alex", "resto id: " + restoId);
+                    Log.i("alex", "user ID: " + service.getCurrentUserId());
+
+                    RatingsHelper.createRating(rid, restoId, service.getCurrentUserId(),
+                            rateGiven).addOnFailureListener(onFailureListener());
+
+                    service.addRating(rating);
+                    //TODO add locally
                 }
                 dismiss();
             }

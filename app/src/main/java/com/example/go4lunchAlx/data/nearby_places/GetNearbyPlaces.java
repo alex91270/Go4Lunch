@@ -73,14 +73,14 @@ public class GetNearbyPlaces {
 
 
             URL url = new URL(sb.toString());
-            Log.i("alex", "opening connection");
+            //Log.i("alex", "opening connection");
             conn = (HttpURLConnection) url.openConnection();
             InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
             int read;
             char[] buff = new char[1024];
             while ((read = in.read(buff)) != -1) {
-                Log.i("alex", "reading buffer");
+                //Log.i("alex", "reading buffer");
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
@@ -96,27 +96,14 @@ public class GetNearbyPlaces {
         }
 
         try {
-            // Create a JSON object hierarchy from the results
-            Log.i("alex", "creating JSON");
             JSONObject jsonObj = new JSONObject(jsonResults.toString());
-            Log.i("alex", "JSON got: " + jsonObj);
             JSONArray predsJsonArray = jsonObj.getJSONArray("results");
 
-            // Extract the descriptions from the results
-            Log.i("alex", "extracting results");
-            //resultList = new ArrayList<Place>(predsJsonArray.length());
-
-            service.clearNearbyRestaurants();
-
             for (int i = 0; i < predsJsonArray.length(); i++) {
-                //Log.i("alex", "place found");
-
                 JSONObject jsonObject = predsJsonArray.getJSONObject(i);
                 Restaurant resto = buildRestaurantFromJson(jsonObject);
-                //Log.i("alex", "resto found: " + resto.getId());
-                service.addNearbyRestaurant(resto);
+                service.addRestaurant(resto);
             }
-            Log.i("alex", "list size: " + String.valueOf(service.getAllRestaurants().size()));
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error processing JSON results", e);
             result = "Error processing JSON result";
@@ -128,16 +115,17 @@ public class GetNearbyPlaces {
     private Restaurant buildRestaurantFromJson(JSONObject jsonObject) {
 
         try {
-            String latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
-            String longitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            LatLng restoLocation = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+            //String latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
+            //String longitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
+            //LatLng restoLocation = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
             String reference = jsonObject.getString("reference");
-            String name = jsonObject.getString("name");
-            String vicinity = jsonObject.getString("vicinity");
-            int distance = calculateDistance(restoLocation, location);
+            //String name = jsonObject.getString("name");
+            //String vicinity = jsonObject.getString("vicinity");
+            //int distance = calculateDistance(restoLocation, location);
 
             //Log.i("alex", "resto name: " + name + " id: " + reference);
-            String photo;
+            //String photo;
+            /**
 
             try{
                 photo = jsonObject.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
@@ -145,6 +133,7 @@ public class GetNearbyPlaces {
                 Log.i("alex", "no photo array ");
                 photo = "no_pic";
             }
+             */
             //JSONObject photo1 = photosArray.getJSONObject(0);
             //String photo = photo1.getString("photo_reference");
 
@@ -156,7 +145,7 @@ public class GetNearbyPlaces {
 
 
 
-
+/**
             double rating = 0;
             if (!jsonObject.isNull("rating")) {
                 rating = Double.valueOf(jsonObject.getString("rating"));
@@ -171,6 +160,9 @@ public class GetNearbyPlaces {
                     opening = "closed";
                 }
         }
+ */
+
+
             //return new Restaurant(reference, name, photo, restoLocation, rating, vicinity, opening, distance);
             return new Restaurant(reference);
         } catch (JSONException e) {

@@ -7,8 +7,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.go4lunchAlx.models.User;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserHelper {
 
@@ -24,11 +27,25 @@ public class UserHelper {
 
     public static Task<Void> createUser(String uid, String username, String urlPicture) {
         // 1 - Create Obj
-        User userToCreate = new User(uid, username, urlPicture, "restaurant", 1);
+        //User userToCreate = new User(uid, username, urlPicture, "restaurant", 1);
+        //User userToCreate = new User(uid, username, urlPicture);
         Log.i("alex", "userhelper create user");
-        Log.i("alex", "new user selected rest: " + userToCreate.getSelectedRestaurant());
+        //Log.i("alex", "new user selected rest: " + userToCreate.getSelectedRestaurant());
 
-        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("uid", uid);
+        data.put("username", username);
+        data.put("urlPicture", urlPicture);
+
+        return UserHelper.getUsersCollection().document(uid)
+                .set(data, SetOptions.merge());
+
+
+
+
+
+        //return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
     // --- GET ---

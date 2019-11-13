@@ -1,34 +1,24 @@
 package com.example.go4lunchAlx.ui.list;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.detail.DetailActivity;
-
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
-
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,22 +61,14 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             holder.mRestaurantAddress.setText(restaurant.getVicinity());
         }
 
+        Log.i("alex", "resto: " + restaurant.getName() + " list attendant size: " + restaurant.getAttendants().size());
         holder.mRestaurantAttendants.setText("(" + restaurant.getAttendants().size() + ")");
         holder.mRestaurantDistance.setText(restaurant.getDistance() + "m");
-        holder.mRestaurantOpening.setText(restaurant.getOpening());
+        //holder.mRestaurantOpening.setText(restaurant.getOpening());
 
-        //int rate = getRate(restaurant);
-        //int yellowsize = ((int)(Math.round(rate*0.2*holder.mStars.getLayoutParams().width)));
+        Log.i("alex", "opening hours: " + restaurant.getOpening());
 
         holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
-
-        Log.i("alex", "size of yellow should be: " + ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))));
-
-        //holder.yellowBackground.getLayoutParams().width = yellowsize;
-        //Log.i("alex", "rate of restaurant " + restaurant.getName() + " is: " + rate);
-        //holder.yellowBackground.getLayoutParams().width = (int) Math.round(holder.mStars.getLayoutParams().width) * (0.2) * getRate(restaurant)) ;
-
-        //Log.i("alex", "taille des etoiles: " + holder.mStars.getLayoutParams().width);
 
         if (restaurant.getPhoto() == null) {
             holder.mRestaurantPhoto.setImageResource(R.drawable.resto_sign150);
@@ -111,8 +93,6 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
                 mContext.startActivity(intent);
             }
         });
-
-
     }
 
     @Override
@@ -147,12 +127,13 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-
         }
-
     }
 
     private int getRate(Restaurant restaurant) {
+
+        //Log.i("alex", "get rate of restaurant " + restaurant.getId());
+
         int numberRates = 0;
         int totalRate = 0;
         for (Rating rating : service.getListOfRatings()) {
@@ -161,7 +142,11 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
                 numberRates+=1;
             }
         }
+
+        //Log.i("alex", "number of ratings: " + numberRates);
+
         if (totalRate > 0) {
+            //Log.i("alex", "rate: " + totalRate);
             return totalRate / numberRates;
         } else {
             return 0;

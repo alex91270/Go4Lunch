@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.go4lunchAlx.TestActivity;
+
 import com.example.go4lunchAlx.api.RatingsHelper;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.main.MainActivity;
@@ -109,7 +109,6 @@ public class SigninActivity extends AppCompatActivity {
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-
                 this.createUserInFirestore();
                 showSnackBar(this.constraintLayout, getString(R.string.connection_succeed));
                 Intent intent = new Intent(this, MainActivity.class);
@@ -134,6 +133,8 @@ public class SigninActivity extends AppCompatActivity {
 
     private void createUserInFirestore(){
 
+        //User user = UserHelper.getUser(getCurrentUser().getUid());
+
         if (this.getCurrentUser() != null){
 
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
@@ -142,7 +143,7 @@ public class SigninActivity extends AppCompatActivity {
 
             service.setCurrentUserId(uid);
 
-            Log.i("alex", "signin act create user");
+            //Log.i("alex", "signin act create user");
 
             UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
         }

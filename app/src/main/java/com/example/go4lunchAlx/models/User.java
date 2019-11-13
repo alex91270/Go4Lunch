@@ -9,7 +9,14 @@ public class User {
     @Nullable private String selectedRestaurant;
     @Nullable private long dateSelection;
 
-    public User() { }
+    public User() {
+    }
+
+    public User(String uid, String username, String urlPicture) {
+        this.uid = uid;
+        this.username = username;
+        this.urlPicture = urlPicture;
+    }
 
     public User(String uid, String username, String urlPicture, String selectedRestaurant, long dateSelection) {
         this.uid = uid;
