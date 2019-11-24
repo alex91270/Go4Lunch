@@ -77,20 +77,20 @@ public class GetFirebaseData {
                     service.clearListOfRatings();
                     for (DocumentSnapshot document : task.getResult()) {
                         Rating rating = document.toObject(Rating.class);
-                        Log.i("alex", "rating: " + rating.getRestaurantID());
+                        //Log.i("alex", "rating: " + rating.getRestaurantID());
                         if (!service.getListOfRatings().contains(rating)){
                             service.addRating(rating);
-                            Log.i("alex", "nouveau rating trouvé");
+                            //Log.i("alex", "nouveau rating trouvé");
                         } else {
-                            Log.i("alex", "rating existe deja");
+                            //Log.i("alex", "rating existe deja");
                         }
                     }
 
                     result = "success";
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
 
-                    Log.i("alex", "rating list size: " + service.getListOfRatings().size());
-                    Log.i("alex", "rating list: " + service.getListOfRatings());
+                    //Log.i("alex", "rating list size: " + service.getListOfRatings().size());
+                    //Log.i("alex", "rating list: " + service.getListOfRatings());
 
 
                 } else {

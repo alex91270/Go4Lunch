@@ -8,6 +8,7 @@ public class User {
     @Nullable private String urlPicture;
     @Nullable private String selectedRestaurant;
     @Nullable private long dateSelection;
+    //@Nullable private String email;
 
     public User() {
     }
@@ -16,6 +17,7 @@ public class User {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
+        //this.email = email;
     }
 
     public User(String uid, String username, String urlPicture, String selectedRestaurant, long dateSelection) {
@@ -24,6 +26,7 @@ public class User {
         this.urlPicture = urlPicture;
         this.selectedRestaurant = selectedRestaurant;
         this.dateSelection = dateSelection;
+        //this.email = email;
     }
 
     // --- GETTERS ---
@@ -32,6 +35,7 @@ public class User {
     public String getUrlPicture() { return urlPicture; }
     public String getSelectedRestaurant() { return selectedRestaurant; }
     public Long getDateSelection() { return dateSelection;}
+    //public String getEmail() {return email;}
 
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
@@ -39,6 +43,7 @@ public class User {
     public void setUrlPicture(String urlPicture) { this.urlPicture = urlPicture; }
     public void setSelectedRestaurant(String restaurantID) { this.selectedRestaurant = restaurantID; }
     public void setDateSelection(Long dateSelection) { this.dateSelection = dateSelection;}
+    //public void setEmail(String email) {this.email = email;}
 
     @Override
     public boolean equals(Object o) {

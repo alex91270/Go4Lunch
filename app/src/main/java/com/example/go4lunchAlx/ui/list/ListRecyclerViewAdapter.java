@@ -2,6 +2,7 @@ package com.example.go4lunchAlx.ui.list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,12 +62,13 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             holder.mRestaurantAddress.setText(restaurant.getVicinity());
         }
 
-        Log.i("alex", "resto: " + restaurant.getName() + " list attendant size: " + restaurant.getAttendants().size());
+        //Log.i("alex", "resto: " + restaurant.getName() + " list attendant size: " + restaurant.getAttendants().size());
         holder.mRestaurantAttendants.setText("(" + restaurant.getAttendants().size() + ")");
         holder.mRestaurantDistance.setText(restaurant.getDistance() + "m");
-        //holder.mRestaurantOpening.setText(restaurant.getOpening());
+        holder.mRestaurantOpening.setText(restaurant.getOpening());
+        if (restaurant.getOpening() == "closing soon") holder.mRestaurantOpening.setTextColor(Color.RED);
 
-        Log.i("alex", "opening hours: " + restaurant.getOpening());
+        //Log.i("alex", "opening hours: " + restaurant.getOpening());
 
         holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
 

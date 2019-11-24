@@ -160,4 +160,8 @@ public interface ApiService {
     void setUserSelectedRestaurant(String userId, String selectedRestaurant);
 
     String getRestaurantIdByName(String name);
+
+    String getMyEmailAddress();
+
+    void setMyEmailAddress(String email);
 }

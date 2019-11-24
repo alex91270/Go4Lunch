@@ -1,38 +1,33 @@
 package com.example.go4lunchAlx.main;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
-import com.example.go4lunchAlx.models.Restaurant;
+import com.example.go4lunchAlx.detail.DetailActivity;
+import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.RestApiService;
 import com.example.go4lunchAlx.signin.SigninActivity;
 import com.example.go4lunchAlx.ui.list.ListViewFragment;
 import com.example.go4lunchAlx.ui.map.MapViewFragment;
 import com.example.go4lunchAlx.ui.mates.MatesViewFragment;
 import com.example.go4lunchAlx.ui.settings.SettingsFragment;
-import com.example.go4lunchAlx.ui.yourlunch.YourLunchFragment;
-import com.example.go4lunchAlx.viewmodel.DataViewModel;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -40,25 +35,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private BottomNavigationView bottomNavigationView;
+    private RestApiService service = DI.getRestApiService();
 
-    //FOR FRAGMENTS
-    // 1 - Declare fragment handled by Navigation Drawer
+
+    //Declare fragment handled by Navigation Drawer
     private Fragment fragmentYourlunch;
     private Fragment fragmentSettings;
     private Fragment fragmentMapview;
     private Fragment fragmentListview;
     private Fragment fragmentMatesview;
 
-    //FOR DATAS
-    // 2 - Identify each fragment with a number
+    //Identify each fragment with a number
     private static final int FRAGMENT_YOURLUNCH = 0;
     private static final int FRAGMENT_SETTINGS = 1;
     private static final int FRAGMENT_MAPVIEW = 2;
     private static final int FRAGMENT_LISTVIEW = 3;
     private static final int FRAGMENT_MATESVIEW = 4;
-
-    //private DataViewModel dataViewModel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureNavigationView();
         configureBottomView();
         showFirstFragment();
-
-
-        /**dataViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
-        dataViewModel.getRestoList().observe(this, new Observer<List<Restaurant>>() {
-            public void onChanged(@Nullable List<Restaurant> restos) {
-                Log.i("alex", "change observed, list size: " + restos.size());
-            }
-        });
-         */
-
-
     }
 
     @Override
@@ -110,14 +91,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 break;
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
-    // 5 - Show fragment according an Identifier
-
+    //Show fragment according an Identifier
     private void showFragment(int fragmentIdentifier){
         switch (fragmentIdentifier){
             case FRAGMENT_YOURLUNCH :
@@ -135,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case FRAGMENT_MATESVIEW:
                 showMatesViewFragment();
                 break;
-
             default:
                 break;
         }
@@ -143,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        // 5 - Handle back click to close menu
+        //Handle back click to close menu
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -151,13 +128,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    // 1 - Configure Toolbar
     private void configureToolBar(){
         toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
     }
 
-    // 2 - Configure Drawer Layout
     private void configureDrawerLayout(){
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -165,21 +140,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
     }
 
-    // 3 - Configure NavigationView
     private void configureNavigationView(){
         navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView textViewName = headerView.findViewById(R.id.header_user_name);
+        textViewName.setText(service.getCurrentUser().getUsername());
+        TextView textViewEmail = headerView.findViewById(R.id.header_user_email);
+        textViewEmail.setText(service.getMyEmailAddress());
+        ImageView imageViewAvatar = headerView.findViewById(R.id.header_avatar);
+        Glide.with(this)
+                .load(service.getCurrentUser().getUrlPicture())
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageViewAvatar);
+
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
-    // 2 - Configure BottomNavigationView Listener
     private void configureBottomView(){
         bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     private void showYourlunchFragment(){
-        if (fragmentYourlunch == null) this.fragmentYourlunch = YourLunchFragment.newInstance();
-        startTransactionFragment(fragmentYourlunch);
+        //if (fragmentYourlunch == null) this.fragmentYourlunch = YourLunchFragment.newInstance();
+        //startTransactionFragment(fragmentYourlunch);
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("restoId", service.getUserById(service.getCurrentUserId()).getSelectedRestaurant());
+        this.startActivity(intent);
     }
 
     private void showSettingsFragment(){
@@ -202,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startTransactionFragment(fragmentMatesview);
     }
 
-    // 3 - Generic method that will replace and show a fragment inside the MainActivity Frame Layout
+    //Generic method that will replace and show a fragment inside the MainActivity Frame Layout
     private void startTransactionFragment(Fragment fragment){
         if (!fragment.isVisible()){
             getSupportFragmentManager().beginTransaction()
@@ -210,13 +198,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    // 1 - Show first fragment when activity is created
+    //Show first fragment when activity is created
     private void showFirstFragment(){
         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_frame_layout);
         if (visibleFragment == null){
-            // 1.1 - Show News Fragment
             showFragment(FRAGMENT_MAPVIEW);
-            // 1.2 - Mark as selected the menu item corresponding to NewsFragment
             navigationView.getMenu().getItem(0).setChecked(true);
         }
     }

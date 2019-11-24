@@ -40,44 +40,9 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
         constraintLayout = findViewById(R.id.signin_constraint_layout);
 
-        /**Date date = new Date();
-        Long dateLong = date.getTime();
-        Log.i("alex", "date du jour: " + dateLong);
-         */
-
         //startActivity(new Intent(this, MainActivity.class));
-        //startActivity(new Intent(this, TestActivity.class));
-
-       startSignInActivity();
+        startSignInActivity();
     }
-
-    private void testUserLogued() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user!=null) {
-            // User is signed in.
-        } else {
-            // No user is signed in.
-        }
-    }
-
-/**  METHOD IF FIREBASE-UI  3.1.3
-    private void startSignInActivity(){
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setTheme(R.style.LoginTheme)
-                        .setAvailableProviders(
-                                Arrays.asList(
-                                        new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(), //EMAIL
-                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(), //GOOGLE
-                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build())) // FACEBOOK
-                        .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.logo)
-                        .build(),
-                RC_SIGN_IN);
-    }
- */
-
 
     private void startSignInActivity(){ //METHOD FOR FIREBASE-UI 4.3.2
         // Choose authentication providers
@@ -113,27 +78,16 @@ public class SigninActivity extends AppCompatActivity {
                 showSnackBar(this.constraintLayout, getString(R.string.connection_succeed));
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-
-
             }
 
-            else { // ERRORS
-                /**
-                if (response == null) {
-                    showSnackBar(this.constraintLayout, getString(R.string.error_authentication_canceled));
-                } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackBar(this.constraintLayout, getString(R.string.error_no_internet));
-                } else if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    showSnackBar(this.constraintLayout, getString(R.string.error_unknown_error));
-                }
-                 */
+            else { // ERROR LOGUING
+                showSnackBar(this.constraintLayout, getString(R.string.connection_failed));
+                startSignInActivity();
             }
         }
     }
 
     private void createUserInFirestore(){
-
-        //User user = UserHelper.getUser(getCurrentUser().getUid());
 
         if (this.getCurrentUser() != null){
 
@@ -141,10 +95,9 @@ public class SigninActivity extends AppCompatActivity {
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
 
+            service.setCurrentUser(new User(uid, username, urlPicture));
             service.setCurrentUserId(uid);
-
-            //Log.i("alex", "signin act create user");
-
+            service.setMyEmailAddress(this.getCurrentUser().getEmail());
             UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
         }
     }
@@ -163,7 +116,4 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
-
-    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
-
 }

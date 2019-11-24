@@ -19,6 +19,7 @@ public class RestApiService implements ApiService {
     private List<Rating> listOfRatings = new ArrayList<>();
     private List<Restaurant> restaurants = new ArrayList<>();
     private String currentUserId = null;
+    private String myEmailAddress;
 
 
     @Override
@@ -187,5 +188,15 @@ public class RestApiService implements ApiService {
                 restaurant.deleteAttendant(attendantId);
             }
         }
+    }
+
+    @Override
+    public String getMyEmailAddress() {
+        return myEmailAddress;
+    }
+
+    @Override
+    public void setMyEmailAddress(String email) {
+        myEmailAddress = email;
     }
 }

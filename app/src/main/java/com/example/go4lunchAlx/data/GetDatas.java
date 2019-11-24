@@ -2,9 +2,7 @@ package com.example.go4lunchAlx.data;
 
 import android.content.Context;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-
+import com.example.go4lunchAlx.api.OpeningHelper;
 import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
 import com.example.go4lunchAlx.data.firebase_data.OnFirebaseDataReadyCallback;
 import com.example.go4lunchAlx.data.nearby_places.GetNearbyPlaces;
@@ -14,27 +12,18 @@ import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.example.go4lunchAlx.viewmodel.DataViewModel;
-import com.facebook.all.All;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
+import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +36,8 @@ public class GetDatas {
     private Context mContext;
     private DataViewModel dataViewModel;
     private List<Restaurant> AllRestaurantsWithIdOnly;
+    private Calendar calendar;
+    private Date date;
 
     public GetDatas(DataViewModel dataViewModel){
         this.dataViewModel = dataViewModel;
@@ -55,9 +46,10 @@ public class GetDatas {
     public void process(Context mContext, LatLng location, String apiKey) {
         this.mContext = mContext;
         mPlacesClient = Places.createClient(mContext);
-
         service.clearRestaurants();
-        Log.i("alex", "get data process");
+        calendar = Calendar.getInstance();
+        date = calendar.getTime();
+        //Log.i("alex", "get data process");
         getNearbyPlacesData(location, apiKey);
     }
 
@@ -106,19 +98,19 @@ public class GetDatas {
 
         for (User user: service.getFirebaseUsers()) {
             attendants.clear();
-            Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
+            //Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
             if (user.getDateSelection()!= null && getToday().equals(getDayFromLong(user.getDateSelection()))) {
                 //Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
-                Log.i("alex", "today selection found");
+                //Log.i("alex", "today selection found");
                 if (user.getSelectedRestaurant()!= null) {
-                    Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
+                    //Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
                     attendants.add(user.getUid());
                     selectedRestaurant = new Restaurant(user.getSelectedRestaurant(), attendants);
                     if (!service.getRestaurants().contains(selectedRestaurant)) {
                         service.addRestaurant(selectedRestaurant);
                     } else {
-                        Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
-                        Log.i("alex", "user who selected: " + user.getUid());
+                        //Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
+                        //Log.i("alex", "user who selected: " + user.getUid());
 
                         service.addAttendantToRestaurant(user.getSelectedRestaurant(), user.getUid());                    }
                 }
@@ -179,11 +171,22 @@ public class GetDatas {
             }
             resto.setPhoto(photoRef);
 
+
+
             String opening = "No opening hours";
+
             if (place.getOpeningHours() != null){
-                opening = place.getOpeningHours().toString();
+
+                List<Period> listPeriods = place.getOpeningHours().getPeriods();
+
+                Log.i("alex", "openingString: " +  new OpeningHelper().getOpeningString(listPeriods, date));
+
+              opening = new OpeningHelper().getOpeningString(listPeriods, date);
+
             }
             resto.setOpening(opening);
+
+
 
             int distance = calculateDistance(service.getCurrentLocation(), location);
             resto.setDistance(distance);
@@ -192,23 +195,7 @@ public class GetDatas {
 
             service.updateRestaurant(resto);
 
-            //Restaurant restaurantToadd = new Restaurant(resto.getId(), name, photoRef, location,0,vicinity,opening,distance );
-            //allRestaurantsWithInfo.add(restaurantToadd);
-            //Log.i("alex", "adding resto from fetch");
-
-
-            //***********
-            //if (!service.getAllRestaurants().contains(restaurantToadd)) {
-               // service.getAllRestaurants().add(restaurantToadd);
-               // }
-            //service.addRestaurantToAll(restaurantToadd);
-            //dataViewModel.updateViewModel();
-
             if (place.getId().equals(service.getRestaurants().get(service.getRestaurants().size()-1).getId())) {
-                //Log.i("alex", "finished fetching last resto");
-                //Log.i("alex", "list restaurantwithId size: " + AllRestaurantsWithIdOnly.size());
-                //Log.i("alex", "list restaurantwithinfo size: " + allRestaurantsWithInfo.size());
-                //Log.i("alex", "list restaurant of service size: " + service.getAllRestaurants().size());
                 dataViewModel.updateViewModel();
             }
         }).addOnFailureListener((exception) -> {

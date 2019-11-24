@@ -29,7 +29,7 @@ public class UserHelper {
         // 1 - Create Obj
         //User userToCreate = new User(uid, username, urlPicture, "restaurant", 1);
         //User userToCreate = new User(uid, username, urlPicture);
-        Log.i("alex", "userhelper create user");
+        //Log.i("alex", "userhelper create user");
         //Log.i("alex", "new user selected rest: " + userToCreate.getSelectedRestaurant());
 
 
@@ -37,6 +37,7 @@ public class UserHelper {
         data.put("uid", uid);
         data.put("username", username);
         data.put("urlPicture", urlPicture);
+        //data.put("email", email);
 
         return UserHelper.getUsersCollection().document(uid)
                 .set(data, SetOptions.merge());

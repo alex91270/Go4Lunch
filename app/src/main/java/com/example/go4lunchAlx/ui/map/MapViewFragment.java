@@ -103,7 +103,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("alex", "map view on resume");
+        //Log.i("alex", "map view on resume");
         if (service.getRestaurants().size() > 0) placeMarkers();
     }
 
@@ -181,12 +181,19 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Goo
                 //Log.i("alex", "latlng selected: " + userLocation.toString());
                 selectedLocation = userLocation;
                 getDatas.process(mContext, userLocation, apiKey);
+
+
+             /**
+                service.addRestaurant(new Restaurant(place.getId()));
+                getDatas.fetchRestaurantInfos(place.getId());
+              */
             }
 
             @Override
             public void onError(@NonNull Status status) {
             }
         });
+
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(mContext);
         Task<Location> task = mFusedLocation.getLastLocation();
@@ -206,7 +213,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Goo
 
     public void placeMarkers() {
 
-        Log.i("alex", "place markers");
+        //Log.i("alex", "place markers");
 
         if (mMap != null) {
             mMap.clear();
@@ -221,8 +228,10 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Goo
                 mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName())
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_red_s)));
             } else {
-                mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_green_s)));
+                if (r.getLocation() != null) {
+                    mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_green_s)));
+                }
             }
         }
         int zoomValue = 24-((int)(Math.log(maxDistance) / Math.log(2)));
@@ -232,7 +241,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
-       Log.i("alex", "marker clicked: " + marker.getTitle());
+       //Log.i("alex", "marker clicked: " + marker.getTitle());
 
         Intent intent = new Intent(mContext, DetailActivity.class);
         intent.putExtra("restoId", service.getRestaurantIdByName(marker.getTitle()));

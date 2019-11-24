@@ -53,7 +53,7 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
 
         User user = mWorkmates.get(position);
 
-        if (user.getUrlPicture() == null) {
+        if (user.getUrlPicture() == "no_pic" || user.getUrlPicture() == null) {
             holder.mWorkmatePicture.setImageResource(R.drawable.avatar);
         } else {
             Glide.with(holder.mWorkmatePicture.getContext())

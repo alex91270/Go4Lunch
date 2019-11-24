@@ -48,4 +48,10 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <style name="TimeDialogTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item>
+    </style>
+
 </resources>
