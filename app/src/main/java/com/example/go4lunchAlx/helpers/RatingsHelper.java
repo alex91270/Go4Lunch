@@ -1,7 +1,6 @@
-package com.example.go4lunchAlx.api;
+package com.example.go4lunchAlx.helpers;
 
 import com.example.go4lunchAlx.models.Rating;
-import com.example.go4lunchAlx.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;

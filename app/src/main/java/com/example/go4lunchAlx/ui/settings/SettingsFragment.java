@@ -13,11 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import androidx.fragment.app.Fragment;
-
 import com.example.go4lunchAlx.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +85,7 @@ public class SettingsFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                //numberGuests = spinnerArray.get(position);
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {

@@ -45,13 +45,9 @@ public class GetFirebaseData {
                     service.clearFirebaseUsers();
                     for (DocumentSnapshot document : task.getResult()) {
                         User user = document.toObject(User.class);
-                        //Log.i("alex", "user: " + user.getUid() + "  " + user.getUsername());
-                        //for (User u : service.getFirebaseUsers()) {
-                            //Log.i("alex", "same ?: " + user.equals(u));
-                        //}
+
                         if (!service.getFirebaseUsers().contains(user)) {
                             service.addFirebaseUser(user);
-                            //Log.i("alex", "One user added. user list size: " + service.getFirebaseUsers().size());
                         }
 
                     }
@@ -77,21 +73,13 @@ public class GetFirebaseData {
                     service.clearListOfRatings();
                     for (DocumentSnapshot document : task.getResult()) {
                         Rating rating = document.toObject(Rating.class);
-                        //Log.i("alex", "rating: " + rating.getRestaurantID());
                         if (!service.getListOfRatings().contains(rating)){
                             service.addRating(rating);
-                            //Log.i("alex", "nouveau rating trouvé");
-                        } else {
-                            //Log.i("alex", "rating existe deja");
                         }
                     }
 
                     result = "success";
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
-
-                    //Log.i("alex", "rating list size: " + service.getListOfRatings().size());
-                    //Log.i("alex", "rating list: " + service.getListOfRatings());
-
 
                 } else {
                     Log.d("alex", "failure getting ratings");

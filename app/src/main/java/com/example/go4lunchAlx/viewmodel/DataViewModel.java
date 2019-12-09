@@ -1,19 +1,12 @@
 package com.example.go4lunchAlx.viewmodel;
 
-import android.app.Application;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

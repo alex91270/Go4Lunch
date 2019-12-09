@@ -1,4 +1,4 @@
-package com.example.go4lunchAlx.api;
+package com.example.go4lunchAlx.helpers;
 
 import android.util.Log;
 
@@ -32,7 +32,6 @@ public class OpeningHelper {
             }
             if (period.toString().contains(dayString.toUpperCase())) {
 
-                Log.i("alex", "period of today: " + period.toString());
                 calendar = Calendar.getInstance();
 
                 calendar.set(Calendar.HOUR_OF_DAY, period.getOpen().getTime().getHours());
@@ -47,10 +46,10 @@ public class OpeningHelper {
                     result = "closed";
                 }
                 if (dateNow.getTime() < openingDate.getTime()) {
-                    result = "opens at " + period.getOpen();
+                    result = "opens at " + period.getOpen().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
                 }
                 if (dateNow.getTime() > openingDate.getTime() && dateNow.getTime() < closingDate.getTime()) {
-                    result = "closes at " + period.getClose();
+                    result = "closes at " + period.getClose().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
                     if ((closingDate.getTime() - dateNow.getTime()) < 900000) {
                         result = "closing soon";
                     }

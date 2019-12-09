@@ -2,7 +2,6 @@ package com.example.go4lunchAlx.models;
 
 import androidx.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,5 +113,10 @@ public class Restaurant {
             return false;
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

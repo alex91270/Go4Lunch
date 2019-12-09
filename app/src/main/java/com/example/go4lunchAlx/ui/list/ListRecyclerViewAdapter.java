@@ -3,7 +3,6 @@ package com.example.go4lunchAlx.ui.list;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,14 +60,10 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         } else {
             holder.mRestaurantAddress.setText(restaurant.getVicinity());
         }
-
-        //Log.i("alex", "resto: " + restaurant.getName() + " list attendant size: " + restaurant.getAttendants().size());
         holder.mRestaurantAttendants.setText("(" + restaurant.getAttendants().size() + ")");
         holder.mRestaurantDistance.setText(restaurant.getDistance() + "m");
         holder.mRestaurantOpening.setText(restaurant.getOpening());
         if (restaurant.getOpening() == "closing soon") holder.mRestaurantOpening.setTextColor(Color.RED);
-
-        //Log.i("alex", "opening hours: " + restaurant.getOpening());
 
         holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
 
@@ -134,8 +129,6 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
 
     private int getRate(Restaurant restaurant) {
 
-        //Log.i("alex", "get rate of restaurant " + restaurant.getId());
-
         int numberRates = 0;
         int totalRate = 0;
         for (Rating rating : service.getListOfRatings()) {
@@ -145,10 +138,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             }
         }
 
-        //Log.i("alex", "number of ratings: " + numberRates);
-
         if (totalRate > 0) {
-            //Log.i("alex", "rate: " + totalRate);
             return totalRate / numberRates;
         } else {
             return 0;

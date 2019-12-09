@@ -2,7 +2,7 @@ package com.example.go4lunchAlx.data;
 
 import android.content.Context;
 import android.util.Log;
-import com.example.go4lunchAlx.api.OpeningHelper;
+import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
 import com.example.go4lunchAlx.data.firebase_data.OnFirebaseDataReadyCallback;
 import com.example.go4lunchAlx.data.nearby_places.GetNearbyPlaces;
@@ -19,7 +19,6 @@ import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +31,10 @@ public class GetDatas {
     private RestApiService service = DI.getRestApiService();
     SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yy");
     private PlacesClient mPlacesClient;
-    private List<Restaurant> allRestaurantsWithInfo = new ArrayList<>();
+    //private List<Restaurant> allRestaurantsWithInfo = new ArrayList<>();
     private Context mContext;
     private DataViewModel dataViewModel;
-    private List<Restaurant> AllRestaurantsWithIdOnly;
+    //private List<Restaurant> AllRestaurantsWithIdOnly;
     private Calendar calendar;
     private Date date;
 
@@ -49,7 +48,6 @@ public class GetDatas {
         service.clearRestaurants();
         calendar = Calendar.getInstance();
         date = calendar.getTime();
-        //Log.i("alex", "get data process");
         getNearbyPlacesData(location, apiKey);
     }
 
@@ -59,25 +57,17 @@ public class GetDatas {
         GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces(new OnNearbyPlacesReadyCallback() {
             @Override
             public void OnNearbyPlacesReady(String result) {
-                //Log.i("alex", "le download  de place est fini et result: " + result);
-                //Log.i("alex", "number of restaurants nearby: " + service.getNearbyRestaurants().size());
-
-                getFirebaseData(location);
+                getFirebaseData();
             }
         });
         getNearbyPlaces.downloadNearbyRestaurants(apiKey, location);
     }
 
 
-    public void getFirebaseData(LatLng location) {
+    public void getFirebaseData() {
             GetFirebaseData getFirebaseData = new GetFirebaseData(new OnFirebaseDataReadyCallback() {
                 @Override
                 public void onFirebaseDataReady(String result) {
-                   // Log.i("alex", "le download  de firebase est fini et result: " + result);
-                    //Log.i("alex", "call back after firebase in map fragment");
-                    //Log.i("alex", "userlist size: " + service.getFirebaseUsers().size());
-                   // Log.i("alex", "ratinglist size: " + service.getListOfRatings().size());
-
                     mergeDatas();
                 }
             });
@@ -87,10 +77,6 @@ public class GetDatas {
 
     public void mergeDatas() {
 
-        //AllRestaurantsWithIdOnly = new ArrayList<>();
-
-        //AllRestaurantsWithIdOnly.addAll(service.getNearbyRestaurants());
-
         Restaurant selectedRestaurant;
         ArrayList<String> attendants = new ArrayList<>();
 
@@ -98,20 +84,14 @@ public class GetDatas {
 
         for (User user: service.getFirebaseUsers()) {
             attendants.clear();
-            //Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
             if (user.getDateSelection()!= null && getToday().equals(getDayFromLong(user.getDateSelection()))) {
-                //Log.i("alex", "today: " + getToday() + " day selection: " + getDayFromLong(user.getDateSelection()));
-                //Log.i("alex", "today selection found");
+
                 if (user.getSelectedRestaurant()!= null) {
-                    //Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
                     attendants.add(user.getUid());
                     selectedRestaurant = new Restaurant(user.getSelectedRestaurant(), attendants);
                     if (!service.getRestaurants().contains(selectedRestaurant)) {
                         service.addRestaurant(selectedRestaurant);
                     } else {
-                        //Log.i("alex", "selected resto: " + user.getSelectedRestaurant());
-                        //Log.i("alex", "user who selected: " + user.getUid());
-
                         service.addAttendantToRestaurant(user.getSelectedRestaurant(), user.getUid());                    }
                 }
             }
@@ -120,73 +100,36 @@ public class GetDatas {
         for(Restaurant resto : service.getRestaurants()) {
            fetchRestaurantInfos(resto.getId());
         }
-
-
-
-        //service.setAllRestaurantsList(allRestaurantsWithInfo);
-        //dataViewModel.updateViewModel();
-        //Log.i("alex", "viewmodel of getData is; " + dataViewModel);
-
     }
 
-
-
     public  void fetchRestaurantInfos(String restoId) {
-        //Log.i("alex", "inside fetch");
 
         Restaurant resto = service.getRestaurantById(restoId);
-
-
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.OPENING_HOURS);
-        //Log.i("alex", "restoId: " + resto.getId());
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(resto.getId(), placeFields);
-        //Log.i("alex", "request: " + request);
-
-
 
         mPlacesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
 
-
-            //String name = place.getName();
             resto.setName(place.getName());
-
-            //String vicinity = place.getAddress();
             resto.setVicinity(place.getAddress());
-
             LatLng location = place.getLatLng();
-
-            //Log.i("alex", "resto id: " + resto.getId() + "  location: " + location);
             resto.setLocation(place.getLatLng());
-
 
             String photoRef = "no_pic";
             if (place.getPhotoMetadatas() != null){
                 String photoString = place.getPhotoMetadatas().get(0).toString();
                 photoRef = photoString.substring(
                                 photoString.indexOf("photoReference=")+15, photoString.length()-1);
-
-                //Log.i("alex", "photo full string is: " + photoString);
-                //Log.i("alex", "photo splitetd string is: " + photoRef);
             }
             resto.setPhoto(photoRef);
 
-
-
             String opening = "No opening hours";
-
             if (place.getOpeningHours() != null){
-
                 List<Period> listPeriods = place.getOpeningHours().getPeriods();
-
-                Log.i("alex", "openingString: " +  new OpeningHelper().getOpeningString(listPeriods, date));
-
               opening = new OpeningHelper().getOpeningString(listPeriods, date);
-
             }
             resto.setOpening(opening);
-
-
 
             int distance = calculateDistance(service.getCurrentLocation(), location);
             resto.setDistance(distance);
@@ -202,11 +145,9 @@ public class GetDatas {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
                 int statusCode = apiException.getStatusCode();
-                // Handle error with given status code.
-               // Log.e("alex", "Place not found: " + exception.getMessage());
+               Log.e("alex", "Place not found: " + exception.getMessage());
             }
-        });
-    }
+        });    }
 
 
     public int calculateDistance(LatLng StartP, LatLng EndP) {
@@ -222,29 +163,14 @@ public class GetDatas {
                 * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
                 * Math.sin(dLon / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        double valueResult = Radius * c;
-        double km = valueResult / 1;
-        DecimalFormat newFormat = new DecimalFormat("####");
-        int kmInDec = Integer.valueOf(newFormat.format(km));
-        double meter = valueResult % 1000;
-        int meterInDec = Integer.valueOf(newFormat.format(meter));
-        //Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
-        //        + " Meter   " + meterInDec);
-
         return (int) Math.floor(Radius * c * 1000);
     }
 
     public String getDayFromLong(Long dateLong) {
-        Date date = new Date(dateLong);
-        //Calendar cal = Calendar.getInstance();
-        //cal.setTime(date);
-        String simpleDate = ft.format(date);
-        return simpleDate;
+        return ft.format(new Date(dateLong));
     }
 
     public String getToday() {
-        Date date = new Date();
-        String simpleDate = ft.format(date);
-        return simpleDate;
+        return ft.format(new Date());
     }
 }

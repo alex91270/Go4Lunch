@@ -2,41 +2,37 @@ package com.example.go4lunchAlx.detail;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
 import com.example.go4lunchAlx.R;
-import com.example.go4lunchAlx.api.RatingsHelper;
+import com.example.go4lunchAlx.helpers.RatingsHelper;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.google.android.gms.tasks.OnFailureListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LikeDialogFragment extends DialogFragment {
 
-    Button buttonRate;
-    ImageView star1;
-    ImageView star2;
-    ImageView star3;
-    ImageView star4;
-    ImageView star5;
-    int rateGiven = 6;
+    private Button buttonRate;
+    private ImageView star1;
+    private ImageView star2;
+    private ImageView star3;
+    private ImageView star4;
+    private ImageView star5;
+    private int rateGiven = 6;
     private RestApiService service = DI.getRestApiService();
     private List<Rating> listOfRatings;
-    String restoId;
-    Context context;
+    private String restoId;
+    private Context context;
 
 
     @Override
@@ -53,7 +49,6 @@ public class LikeDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         restoId = getArguments().getString("restoId");
-        Log.i("alex", "resto id in dialog frag: " + restoId);
 
         buttonRate = view.findViewById(R.id.buttonRate);
         star1 = view.findViewById(R.id.star1);
@@ -110,28 +105,16 @@ public class LikeDialogFragment extends DialogFragment {
                 String rid = service.getCurrentUserId() + restoId;
                 rating = new Rating( rid, restoId, service.getCurrentUserId(), rateGiven );
                 if(service.getListOfRatings().contains(rating)) {
-                    //update
-                    Log.i("alex", "this ones exists. updating rating.");
-                    Log.i("alex", "resto id: " + restoId);
-                    Log.i("alex", "user ID: " + service.getCurrentUserId());
                     Rating oldRating = listOfRatings.get((listOfRatings.indexOf(rating)));
                     RatingsHelper.updateRate(rateGiven, oldRating.getrID());
 
                     service.updateRating(rating);
-
-
-                    //TODO add locally
                 } else {
-                    //create
-                    Log.i("alex", "creating a new rating");
-                    Log.i("alex", "resto id: " + restoId);
-                    Log.i("alex", "user ID: " + service.getCurrentUserId());
-
                     RatingsHelper.createRating(rid, restoId, service.getCurrentUserId(),
                             rateGiven).addOnFailureListener(onFailureListener());
 
                     service.addRating(rating);
-                    //TODO add locally
+
                 }
                 dismiss();
             }
@@ -139,7 +122,7 @@ public class LikeDialogFragment extends DialogFragment {
 
     }
 
-    protected OnFailureListener onFailureListener(){
+    private OnFailureListener onFailureListener(){
         return new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {

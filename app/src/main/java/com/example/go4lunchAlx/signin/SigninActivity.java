@@ -5,15 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
-
-
-import com.example.go4lunchAlx.api.RatingsHelper;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.main.MainActivity;
 import com.example.go4lunchAlx.R;
-
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.firebase.ui.auth.AuthUI;
@@ -22,10 +17,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.example.go4lunchAlx.api.UserHelper;
-
+import com.example.go4lunchAlx.helpers.UserHelper;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class SigninActivity extends AppCompatActivity {

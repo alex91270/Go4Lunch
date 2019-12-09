@@ -18,8 +18,9 @@
         >
 
         <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
+        <include
             android:id="@+id/activity_main_toolbar"
+            layout="@layout/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"

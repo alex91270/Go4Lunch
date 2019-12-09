@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BottomNavigationView bottomNavigationView;
     private RestApiService service = DI.getRestApiService();
 
-
     //Declare fragment handled by Navigation Drawer
-    private Fragment fragmentYourlunch;
     private Fragment fragmentSettings;
     private Fragment fragmentMapview;
     private Fragment fragmentListview;
@@ -80,12 +78,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this, SigninActivity.class));
                 break;
             case R.id.action_mapview:
+                toolbar.setTitle("I'm Hungry!");
                 showMapViewFragment();
                 break;
             case R.id.action_listview:
+                toolbar.setTitle("I'm Hungry!");
                 showListViewFragment();
                 break;
             case R.id.action_workmates:
+                toolbar.setTitle("Available workmates");
                 showMatesViewFragment();
                 break;
             default:
@@ -163,8 +164,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showYourlunchFragment(){
-        //if (fragmentYourlunch == null) this.fragmentYourlunch = YourLunchFragment.newInstance();
-        //startTransactionFragment(fragmentYourlunch);
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("restoId", service.getUserById(service.getCurrentUserId()).getSelectedRestaurant());
         this.startActivity(intent);

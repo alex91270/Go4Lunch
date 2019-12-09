@@ -1,5 +1,7 @@
 package com.example.go4lunchAlx.service;
 
+import android.util.Log;
+
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
@@ -12,12 +14,11 @@ import java.util.List;
 public class RestApiService implements ApiService {
 
     private List<User> firebaseUsers = new ArrayList<>();
-   //private List<Restaurant> firestoreRestaurants = new ArrayList<>();
-    //private List<Restaurant> nearbyRestaurants = new ArrayList<>();
     private User currentUser = null;
     private LatLng currentLocation;
     private List<Rating> listOfRatings = new ArrayList<>();
     private List<Restaurant> restaurants = new ArrayList<>();
+    private List<Restaurant> restaurantsSearched = new ArrayList<>();
     private String currentUserId = null;
     private String myEmailAddress;
 
@@ -60,14 +61,25 @@ public class RestApiService implements ApiService {
 
     @Override
     public List<Restaurant> getRestaurants() {
-       //allRestaurants.addAll(firestoreRestaurants);
-        //allRestaurants.addAll(nearbyRestaurants);
         return restaurants;
+    }
+
+    @Override
+    public List<Restaurant> getAllRestaurants() {
+        ArrayList<Restaurant> listToReturn = new ArrayList<>();
+        listToReturn.addAll(restaurants);
+        listToReturn.addAll(restaurantsSearched);
+        return listToReturn;
     }
 
     @Override
     public Restaurant getRestaurantById(String id){
         for (Restaurant restaurant : restaurants) {
+            if ( restaurant.getId().equals(id)) {
+                return restaurant;
+            }
+        }
+        for (Restaurant restaurant : restaurantsSearched) {
             if ( restaurant.getId().equals(id)) {
                 return restaurant;
             }
@@ -86,30 +98,37 @@ public class RestApiService implements ApiService {
     }
 
     @Override
-    public void setRestaurantsList(List<Restaurant> RestaurantsList) {
-        restaurants = RestaurantsList;
-    }
-
-    @Override
     public void addRestaurant(Restaurant restaurant) {
         restaurants.add(restaurant);
     }
 
     @Override
+    public void addRestaurantToSearched(Restaurant restaurant) {
+        Log.i("alex", "into service adding resto to searched");
+        restaurantsSearched.add(restaurant);
+    }
+
+    @Override
     public void updateRestaurant(Restaurant restaurant) {
-    restaurants.set(restaurants.indexOf(restaurant), restaurant);
+        Log.i("alex", "into service update resto not searched");
+
+        if (restaurants.indexOf(restaurant) != -1) {
+            restaurants.set(restaurants.indexOf(restaurant), restaurant);
+        }
+    }
+
+    @Override
+    public void updateSearchedRestaurant(Restaurant restaurant) {
+        Log.i("alex", "searched list size before: " + restaurantsSearched.size());
+        Log.i("alex", " index of searched resto: " + String.valueOf(restaurantsSearched.indexOf(restaurant)));
+        restaurantsSearched.set(restaurantsSearched.indexOf(restaurant), restaurant);
+        Log.i("alex", "searched list size after: " + restaurantsSearched.size());
     }
 
     @Override
     public void clearRestaurants() {
         restaurants.clear();
     }
-
-    /**@Override
-    public void addFirestoreRestaurant(Restaurant restaurant) {
-        firestoreRestaurants.add(restaurant);
-    }
-     */
 
     @Override
     public void addFirebaseUser(User user) {
@@ -121,30 +140,6 @@ public class RestApiService implements ApiService {
 
     @Override
     public List<User> getFirebaseUsers() {return firebaseUsers;}
-
-    /**@Override
-    public void clearFirestoreRestaurants() {
-        firestoreRestaurants.clear();
-    }
-     */
-
-    /**@Override
-    public void addNearbyRestaurant(Restaurant restaurant) {
-        nearbyRestaurants.add(restaurant);
-    }
-     */
-
-    /**@Override
-    public List<Restaurant> getNearbyRestaurants() {
-        return nearbyRestaurants;
-    }
-     */
-
-    /**@Override
-    public void clearNearbyRestaurants() {
-        nearbyRestaurants.clear();
-    }
-     */
 
     @Override
     public LatLng getCurrentLocation() {
