@@ -16,7 +16,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.di.DI;
-import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
 import java.util.List;
@@ -25,9 +24,8 @@ import butterknife.ButterKnife;
 
 public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Restaurant> mRestaurants;
+    private List<Restaurant> mRestaurants;
     private Context mContext;
-    private static View.OnClickListener clickListener;
     private RestApiService service = DI.getRestApiService();
 
     public ListRecyclerViewAdapter(List<Restaurant> items) {
@@ -63,9 +61,9 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         holder.mRestaurantAttendants.setText("(" + restaurant.getAttendants().size() + ")");
         holder.mRestaurantDistance.setText(restaurant.getDistance() + "m");
         holder.mRestaurantOpening.setText(restaurant.getOpening());
-        if (restaurant.getOpening() == "closing soon") holder.mRestaurantOpening.setTextColor(Color.RED);
+        if (restaurant.getOpening().equals(mContext.getString(R.string.closing_soon))) holder.mRestaurantOpening.setTextColor(Color.RED);
 
-        holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
+        holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(service.getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
 
         if (restaurant.getPhoto() == null) {
             holder.mRestaurantPhoto.setImageResource(R.drawable.resto_sign150);
@@ -127,7 +125,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         }
     }
 
-    private int getRate(Restaurant restaurant) {
+    /**private int getRate(Restaurant restaurant) {
 
         int numberRates = 0;
         int totalRate = 0;
@@ -143,5 +141,10 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         } else {
             return 0;
         }
+    }*/
+
+    void updateRestos(@NonNull final List<Restaurant> restos) {
+        this.mRestaurants = restos;
+        notifyDataSetChanged();
     }
 }

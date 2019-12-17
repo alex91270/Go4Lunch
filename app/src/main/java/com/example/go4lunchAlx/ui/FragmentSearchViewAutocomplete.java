@@ -28,7 +28,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FragmentSearchViewAutocomplete extends Fragment {
+public abstract class FragmentSearchViewAutocomplete extends Fragment {
 
     private SimpleCursorAdapter mAdapter;
     private SearchView searchView;
@@ -75,6 +75,7 @@ public class FragmentSearchViewAutocomplete extends Fragment {
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         ((AutoCompleteTextView) searchView.findViewById(R.id.search_src_text)).setThreshold(1);
         searchView.setSuggestionsAdapter(mAdapter);
+        searchView.setQueryHint(getString(R.string.hint_search_rest));
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

@@ -2,6 +2,7 @@ package com.example.go4lunchAlx.ui.settings;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,8 +24,8 @@ public class SettingsFragment extends Fragment {
     private TextView textViewHourChoice;
     private Context context;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
-    private int hoursSet;
-    private int minutesSet;
+
+    private SharedPreferences sharedPreferences;
 
     public static SettingsFragment newInstance() {
         return (new SettingsFragment());
@@ -35,71 +36,35 @@ public class SettingsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_settings, container, false);
         context = view.getContext();
         spinner = view.findViewById(R.id.spinner_sort_list);
-        textViewHourChoice = view.findViewById(R.id.textview_hour_choice);
+        sharedPreferences = context.getSharedPreferences("com.example.go4lunchAlx", Context.MODE_PRIVATE);
 
-        setTimeListener();
         setupSpinner();
 
         return view;
     }
 
-    public void setTimeListener() {
-        textViewHourChoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                TimePickerDialog timeDialog = new TimePickerDialog(
-                        context,
-                        R.style.TimeDialogTheme,
-                        timeSetListener,
-                        12, 00,
-                        android.text.format.DateFormat.is24HourFormat(context));
-                timeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                timeDialog.show();
-            }
-        });
-
-        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                String date = addZero(hourOfDay) + "h" + addZero(minute);
-                textViewHourChoice.setText(date);
-                minutesSet = minute;
-                hoursSet = hourOfDay;
-            }
-        };
-    }
 
     public void setupSpinner() {
-
 
         final List<String> spinnerArray =  new ArrayList<>();
         spinnerArray.add("Trier par proximité");
         spinnerArray.add("Trier par note");
         spinnerArray.add("Trier par nombre de participants");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_sort_list, spinnerArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        spinner.setSelection(Integer.valueOf(sharedPreferences.getString("sortPrefs", "")));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
+                sharedPreferences.edit().putString("sortPrefs", String.valueOf(position)).apply();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
-    }
-
-    public String addZero(int number) {
-        String result;
-        if (number < 10) {
-            result = "0" + String.valueOf(number);
-        }else{
-            result = String.valueOf(number);
-        }
-        return result;
     }
 }

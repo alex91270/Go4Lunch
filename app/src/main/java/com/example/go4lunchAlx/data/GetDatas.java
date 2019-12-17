@@ -127,7 +127,7 @@ public class GetDatas {
             String opening = "No opening hours";
             if (place.getOpeningHours() != null){
                 List<Period> listPeriods = place.getOpeningHours().getPeriods();
-              opening = new OpeningHelper().getOpeningString(listPeriods, date);
+              opening = new OpeningHelper().getOpeningString(mContext, listPeriods, date);
             }
             resto.setOpening(opening);
 

@@ -65,4 +65,6 @@ public interface ApiService {
     String getMyEmailAddress();
 
     void setMyEmailAddress(String email);
+
+    double getRate(Restaurant restaurant);
 }

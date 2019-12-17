@@ -8,16 +8,15 @@
     <string name="facebook_application_id" translatable="false">2328560603927397</string>
 
     <!-- MAIN ACTIVITY -->
-    <string name="error_not_connected">Vous devez vous connecter !</string>
-    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
-    <string name="error_no_internet">Aucune connexion internet !</string>
-    <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
-    <string name="connection_succeed">Authentification réussie !</string>
-    <string name="connection_failed">Echec de l\'authentification !</string>
-    <string name="button_login_text_logged">Afficher le profil</string>
-    <string name="button_login_text_not_logged">Connexion</string>
-    <string name="title_activity_detail">DetailActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="error_not_connected">You must be connected !</string>
+    <string name="error_authentication_canceled">Authentication canceled&#8230;</string>
+    <string name="error_no_internet">No internet connection !</string>
+    <string name="error_unknown_error">An error occurred&#8230;</string>
+    <string name="connection_succeed">Authentication granted !</string>
+    <string name="connection_failed">Authentication failure !</string>
+    <string name="button_login_text_logged">See the profile</string>
+    <string name="button_login_text_not_logged">Connection</string>
+
 
     <!-- BOTTOM NAVIGATION -->
     <string name="title_map">Map View</string>
@@ -25,8 +24,39 @@
     <string name="title_mates">Workmates</string>
     <string name="title_activity_maps">Map</string>
 
-    <!-- Used in NavigationDrawer -->
+    <!-- NAVIGATION DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_yourlunch">YOUR LUNCH</string>
+    <string name="navigation_settings">SETTINGS</string>
+    <string name="navigation_logout">LOGOUT</string>
+    <string name="notification_title">Lunch reminder</string>
+    <string name="notification_body">See your selection for today</string>
+    <string name="default_notification_channel_id">170177</string>
+
+    <!-- TOOLBAR -->
+    <string name="toolbar_title_hungry">I\'m Hungry!</string>
+    <string name="toolbar_title_mates">Available workmates</string>
+    <string name="hint_search_mate">Search workmate...</string>
+    <string name="hint_search_rest">Search restaurant...</string>
+
+    <!-- DETAIL ACTIVITY -->
+    <string name="detail_act_call">CALL</string>
+    <string name="detail_act_like">LIKE</string>
+    <string name="detail_act_web">WEBSITE</string>
+
+    <!-- ALERT DIALOG -->
+    <string name="alert_dialog_title">How much did you like that place?</string>
+    <string name="alert_dialog_button">RATE IT !</string>
+
+    <!-- LIST VIEW -->
+    <string name="no_opening">No opening hours</string>
+    <string name="opened247">Opened 24/7</string>
+    <string name="opens_at">Opens at </string>
+    <string name="now_closed">Now closed</string>
+    <string name="closed_today">Closed today</string>
+    <string name="closing_soon">Closing soon</string>
+    <string name="closes_at">Closes at </string>
+    <string name="opened_until">Opened until </string>
 
 </resources>

@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.example.go4lunchAlx.signin.SigninActivity;
 import com.example.go4lunchAlx.ui.list.ListViewFragment;
@@ -29,6 +30,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener{
 
     private NavigationView navigationView;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private BottomNavigationView bottomNavigationView;
     private RestApiService service = DI.getRestApiService();
+    SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yy");
 
     //Declare fragment handled by Navigation Drawer
     private Fragment fragmentSettings;
@@ -78,15 +83,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this, SigninActivity.class));
                 break;
             case R.id.action_mapview:
-                toolbar.setTitle("I'm Hungry!");
+                toolbar.setTitle(R.string.toolbar_title_hungry);
                 showMapViewFragment();
                 break;
             case R.id.action_listview:
-                toolbar.setTitle("I'm Hungry!");
+                toolbar.setTitle(R.string.toolbar_title_hungry);
                 showListViewFragment();
                 break;
             case R.id.action_workmates:
-                toolbar.setTitle("Available workmates");
+                toolbar.setTitle(R.string.toolbar_title_mates);
                 showMatesViewFragment();
                 break;
             default:
@@ -132,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureToolBar(){
         toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.toolbar_title_hungry);
     }
 
     private void configureDrawerLayout(){
@@ -164,9 +170,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showYourlunchFragment(){
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("restoId", service.getUserById(service.getCurrentUserId()).getSelectedRestaurant());
-        this.startActivity(intent);
+        User currentUser = service.getUserById(service.getCurrentUserId());
+        if (currentUser.getDateSelection()!= null && ft.format(new Date())
+                .equals(ft.format(new Date(currentUser.getDateSelection())))) {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("restoId", currentUser
+                    .getSelectedRestaurant());
+            this.startActivity(intent);
+        } else {
+            Toast.makeText(this, "No restaurant selected yet for today !", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void showSettingsFragment(){
@@ -175,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showMapViewFragment(){
+
         if (fragmentMapview == null) fragmentMapview = MapViewFragment.newInstance();
         startTransactionFragment(fragmentMapview);
     }
@@ -199,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Show first fragment when activity is created
     private void showFirstFragment(){
+        toolbar.setTitle(R.string.toolbar_title_hungry);
         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_frame_layout);
         if (visibleFragment == null){
             showFragment(FRAGMENT_MAPVIEW);

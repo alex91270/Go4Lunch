@@ -2,6 +2,7 @@ package com.example.go4lunchAlx.ui.list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,22 +10,28 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.go4lunchAlx.R;
+import com.example.go4lunchAlx.comparators.SortByAttendants;
+import com.example.go4lunchAlx.comparators.SortByDistance;
+import com.example.go4lunchAlx.comparators.SortByRate;
 import com.example.go4lunchAlx.data.restaurant_search.OnSearchedRestaurantAdded;
 import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
+import com.example.go4lunchAlx.signin.SigninActivity;
 import com.example.go4lunchAlx.ui.FragmentSearchViewAutocomplete;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListViewFragment extends FragmentSearchViewAutocomplete {
@@ -35,7 +42,8 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
     private ListRecyclerViewAdapter myAdapter;
     private OnSearchedRestaurantAdded onSearchedRestaurantAdded;
     private InputMethodManager imm;
-    private List<Restaurant> listDisplayed;
+    private ArrayList<Restaurant> listDisplayed;
+    private SharedPreferences sharedPreferences;
 
     public static ListViewFragment newInstance() {
         return (new ListViewFragment());
@@ -45,25 +53,21 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_list_view, container, false);
+        listDisplayed = new ArrayList<>();
         mContext = this.getActivity();
         mRecyclerView = root.findViewById(R.id.list_restaurants);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-
-        listDisplayed = service.getAllRestaurants();
-
+        sharedPreferences = mContext.getSharedPreferences("com.example.go4lunchAlx", Context.MODE_PRIVATE);
         myAdapter = new ListRecyclerViewAdapter(listDisplayed);
         mRecyclerView.setAdapter(myAdapter);
+        setAdapter();
 
         onSearchedRestaurantAdded = new OnSearchedRestaurantAdded() {
             @Override
             public void onRestaurantAdded() {
-                Log.i("alex", "listview onRestaurantAdded");
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                Log.i("alex", "j'update mon recycler !!");
-                listDisplayed = service.getAllRestaurants();
-                myAdapter.notifyDataSetChanged();
-                mRecyclerView.setAdapter(myAdapter);
+                setAdapter();
 
                 String restoId = service.getAllRestaurants().get(service.getAllRestaurants().size() - 1).getId();
                 Intent intent = new Intent(mContext, DetailActivity.class);
@@ -78,18 +82,16 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.i("alex", "mapview onviewcreated");
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //Log.i("alex", "listview onresume");
+        Log.i("alex", "list on resume");
         if (myAdapter != null) {
-            myAdapter.notifyDataSetChanged();
-            //mRecyclerView.setAdapter(myAdapter);
-        }
+            setAdapter();
+            }
     }
 
     @Override
@@ -97,5 +99,26 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
         super.onPrepareOptionsMenu(menu);
         super.setSuggestionsListener(onSearchedRestaurantAdded);
 
+    }
+
+    private void setAdapter() {
+        listDisplayed.clear();
+        listDisplayed.addAll(service.getAllRestaurants());
+
+        Log.i("alex", "shared preferences read: " + sharedPreferences.getString("sortPrefs", ""));
+
+        switch (sharedPreferences.getString("sortPrefs", "")) {
+            case "0" :
+                Collections.sort(listDisplayed, new SortByDistance());
+                break;
+            case "1":
+                Collections.sort(listDisplayed, new SortByRate());
+                break;
+            case "2":
+                Collections.sort(listDisplayed, new SortByAttendants());
+                break;
+        }
+
+        myAdapter.updateRestos(listDisplayed);
     }
 }

@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class MatesRecyclerViewAdapter extends RecyclerView.Adapter<MatesRecyclerViewAdapter.ViewHolder> {
 
-    private final List<User> mUsers;
+    private List<User> mUsers;
     private String mWhereEats;
     private RestApiService service = DI.getRestApiService();
 
@@ -83,5 +83,10 @@ public class MatesRecyclerViewAdapter extends RecyclerView.Adapter<MatesRecycler
             ButterKnife.bind(this, view);
         }
 
+    }
+
+    void updateMates(@NonNull final List<User> mates) {
+        this.mUsers = mates;
+        notifyDataSetChanged();
     }
 }

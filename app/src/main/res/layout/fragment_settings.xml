@@ -17,7 +17,7 @@
         android:layout_margin="20dip"
         android:background="#FF5722"
         android:text="Tri de la liste de restaurants:"
-        android:textAlignment="center"
+        android:textAlignment="viewStart"
         android:textColor="#fff"
         android:textSize="18sp"
         android:textStyle="normal" />
@@ -27,50 +27,33 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="100dp" />
+
+    <TextView
+        android:id="@+id/textview_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:layout_marginTop="100dp"
+        android:background="#FF5722"
+        android:text="Notifications:"
+        android:textAlignment="viewStart"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="normal" />
 
     <Switch
         android:id="@+id/switch_notifications"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:text="Envoi de notification journalière"
         android:textColor="#FF5722"
         android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textview_hour"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
-        android:background="#FF5722"
-        android:text="Heure de la notification"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textview_hour_choice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="12h00"
-        android:textAlignment="center"
-        android:textColor="#FF5722"
-        android:textSize="18sp"
-        android:visibility="visible" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="OK" />
 
 
 </LinearLayout>

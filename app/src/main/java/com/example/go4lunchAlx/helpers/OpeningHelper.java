@@ -1,8 +1,11 @@
 package com.example.go4lunchAlx.helpers;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+
+import com.example.go4lunchAlx.R;
 import com.google.android.libraries.places.api.model.Period;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,16 +21,17 @@ public class OpeningHelper {
     private Calendar calendar;
 
 
-    public String getOpeningString(List<Period> listPeriods, Date dateNow) {
+    public String getOpeningString(Context context, List<Period> listPeriods, Date dateNow) {
 
-        result = "Closed today";
+        result = context.getString(R.string.closed_today);
 
         dayString = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(dateNow.getTime());
 
         for (Period period : listPeriods) {
 
             if (period.getClose() == null) {
-                result = "Opened 24/7";
+                result = context.getString(R.string.opened247);
+
                 return result;
             }
             if (period.toString().contains(dayString.toUpperCase())) {
@@ -43,15 +47,15 @@ public class OpeningHelper {
                 closingDate = calendar.getTime();
 
                 if (dateNow.getTime() > closingDate.getTime()) {
-                    result = "closed";
+                    result = context.getString(R.string.now_closed);
                 }
                 if (dateNow.getTime() < openingDate.getTime()) {
-                    result = "opens at " + period.getOpen().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
+                    result = context.getString(R.string.opens_at) + period.getOpen().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
                 }
                 if (dateNow.getTime() > openingDate.getTime() && dateNow.getTime() < closingDate.getTime()) {
-                    result = "closes at " + period.getClose().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
+                    result = context.getString(R.string.closes_at) + period.getClose().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
                     if ((closingDate.getTime() - dateNow.getTime()) < 900000) {
-                        result = "closing soon";
+                        result = context.getString(R.string.closing_soon);
                     }
                 }
             }

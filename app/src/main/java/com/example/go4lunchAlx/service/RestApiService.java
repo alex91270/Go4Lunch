@@ -89,7 +89,7 @@ public class RestApiService implements ApiService {
 
     @Override
     public String getRestaurantIdByName(String name) {
-        for (Restaurant restaurant : restaurants) {
+        for (Restaurant restaurant : getAllRestaurants()) {
             if ( restaurant.getName().equals(name)) {
                 return restaurant.getId();
             }
@@ -193,5 +193,23 @@ public class RestApiService implements ApiService {
     @Override
     public void setMyEmailAddress(String email) {
         myEmailAddress = email;
+    }
+
+    @Override
+    public double getRate(Restaurant restaurant) {
+        int numberRates = 0;
+        int totalRate = 0;
+        for (Rating rating : listOfRatings) {
+            if (rating.getRestaurantID().equals(restaurant.getId())){
+                totalRate+=rating.getRate();
+                numberRates+=1;
+            }
+        }
+
+        if (totalRate > 0) {
+            return totalRate / numberRates;
+        } else {
+            return 0;
+        }
     }
 }

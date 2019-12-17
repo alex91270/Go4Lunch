@@ -2,7 +2,6 @@ package com.example.go4lunchAlx.ui.map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,22 +9,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.data.GetDatas;
 import com.example.go4lunchAlx.data.restaurant_search.OnSearchedRestaurantAdded;
-import com.example.go4lunchAlx.data.restaurant_search.RestaurantSearchedAdding;
 import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
@@ -61,17 +55,18 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
     private LatLng selectedLocation;
     private OnSearchedRestaurantAdded onSearchedRestaurantAdded;
     private InputMethodManager imm;
+    private boolean afterResearch;
 
     public static MapViewFragment newInstance() {
         return (new MapViewFragment());
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i("alex", "mapview oncreateview");
+        afterResearch = false;
         onSearchedRestaurantAdded = new OnSearchedRestaurantAdded() {
             @Override
             public void onRestaurantAdded() {
-                Log.i("alex", "mapview onRestaurantAdded");
+                afterResearch = true;
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 placeMarkers();
             }
@@ -102,33 +97,19 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.i("alex", "mapview onviewcreated");
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
         getMap();
     }
-
-
-
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         super.setSuggestionsListener(onSearchedRestaurantAdded);
-
     }
-
-
-
-
-
-
-
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("alex", "mapview onresume");
         //if (service.getRestaurants().size() > 0) placeMarkers();
     }
 
@@ -204,13 +185,11 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         });
     }
 
-    public void placeMarkers() {
-        Log.i("alex", "mapview place markers");
+    private void placeMarkers() {
 
         if (mMap != null) {
             mMap.clear();
         }
-
 
         int maxDistance = 0;
 
@@ -229,7 +208,13 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
             }
         }
         int zoomValue = 24-((int)(Math.log(maxDistance) / Math.log(2)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, zoomValue)); //between 1 and 20
+        if (afterResearch) {
+            afterResearch = false;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(service.getAllRestaurants()
+                    .get(service.getAllRestaurants().size() - 1).getLocation(), 20));
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, zoomValue)); //between 1 and 20
+        }
     }
 
     @Override

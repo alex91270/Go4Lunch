@@ -11,7 +11,7 @@ public class Restaurant {
     private String name;
     private List<String> attendants;
     private LatLng location;
-    private double rating;
+    //private double rating;
     private String vicinity;
     private String opening;
     @Nullable
@@ -28,12 +28,12 @@ public class Restaurant {
         this.attendants = attendants;
     }
 
-    public Restaurant(String id, String name, String photo, LatLng location, double rating, String vicinity, String opening, int distance) {
+    public Restaurant(String id, String name, String photo, LatLng location, String vicinity, String opening, int distance) {
         this.id = id;
         this.name = name;
         this.photo = photo;
         this.location = location;
-        this.rating = rating;
+        //this.rating = rating;
         this.vicinity = vicinity;
         this.opening = opening;
         this.distance = distance;
@@ -88,11 +88,11 @@ public class Restaurant {
         this.vicinity = vicinity;
     }
 
-    public double getRating() {return rating;}
+    //public double getRating() {return rating;}
 
-    public void setRating(double rating){
-        this.rating = rating;
-    }
+    //public void setRating(double rating){
+       // this.rating = rating;
+    //}
 
     public String getOpening() {return opening;}
 
