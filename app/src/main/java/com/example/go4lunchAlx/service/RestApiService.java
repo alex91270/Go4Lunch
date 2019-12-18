@@ -1,13 +1,9 @@
 package com.example.go4lunchAlx.service;
 
-import android.util.Log;
-
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
 import com.google.android.gms.maps.model.LatLng;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,14 +100,11 @@ public class RestApiService implements ApiService {
 
     @Override
     public void addRestaurantToSearched(Restaurant restaurant) {
-        Log.i("alex", "into service adding resto to searched");
         restaurantsSearched.add(restaurant);
     }
 
     @Override
     public void updateRestaurant(Restaurant restaurant) {
-        Log.i("alex", "into service update resto not searched");
-
         if (restaurants.indexOf(restaurant) != -1) {
             restaurants.set(restaurants.indexOf(restaurant), restaurant);
         }
@@ -119,10 +112,7 @@ public class RestApiService implements ApiService {
 
     @Override
     public void updateSearchedRestaurant(Restaurant restaurant) {
-        Log.i("alex", "searched list size before: " + restaurantsSearched.size());
-        Log.i("alex", " index of searched resto: " + String.valueOf(restaurantsSearched.indexOf(restaurant)));
         restaurantsSearched.set(restaurantsSearched.indexOf(restaurant), restaurant);
-        Log.i("alex", "searched list size after: " + restaurantsSearched.size());
     }
 
     @Override
@@ -174,11 +164,23 @@ public class RestApiService implements ApiService {
                 }
             }
         }
+        for (Restaurant restaurant : restaurantsSearched) {
+            if ( restaurant.getId().equals(restoId)) {
+                if (!restaurant.getAttendants().contains(attendantId)) {
+                    restaurant.addAttendant(attendantId);
+                }
+            }
+        }
     }
 
     @Override
     public void removeAttendantFromRestaurant(String attendantId, String restoId) {
         for (Restaurant restaurant : restaurants) {
+            if ( restaurant.getId().equals(restoId)) {
+                restaurant.deleteAttendant(attendantId);
+            }
+        }
+        for (Restaurant restaurant : restaurantsSearched) {
             if ( restaurant.getId().equals(restoId)) {
                 restaurant.deleteAttendant(attendantId);
             }

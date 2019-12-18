@@ -1,5 +1,6 @@
 package com.example.go4lunchAlx.detail;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,11 @@ import butterknife.ButterKnife;
 public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecyclerViewAdapter.ViewHolder> {
 
     private final List<User> mWorkmates;
+    private Context mContext;
 
-    public DetailRecyclerViewAdapter(List<User> items) {
+    DetailRecyclerViewAdapter(Context context, List<User> items) {
         mWorkmates = items;
+        mContext = context;
     }
 
 
@@ -49,7 +52,7 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
                     .into(holder.mWorkmatePicture);
         }
 
-        holder.mWorkmateName.setText(user.getUsername() + " is joining!");
+        holder.mWorkmateName.setText(user.getUsername() + " " + mContext.getString(R.string.detail_joining));
     }
 
     @Override
@@ -66,7 +69,7 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
         public TextView mWorkmateName;
 
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

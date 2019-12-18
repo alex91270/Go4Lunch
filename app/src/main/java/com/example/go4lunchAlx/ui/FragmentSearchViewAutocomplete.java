@@ -5,16 +5,13 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.AutoCompleteTextView;
-
 import androidx.appcompat.widget.SearchView;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.Fragment;
-
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.data.restaurant_search.OnSearchedRestaurantAdded;
 import com.example.go4lunchAlx.data.restaurant_search.RestaurantSearchedAdding;
@@ -24,7 +21,6 @@ import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +62,6 @@ public abstract class FragmentSearchViewAutocomplete extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.toolbar_menu, menu);
-
     }
 
     @Override
@@ -80,7 +75,6 @@ public abstract class FragmentSearchViewAutocomplete extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Log.i("alex", "onQueryTextSubmit");
                 return false;
             }
 
@@ -133,11 +127,10 @@ public abstract class FragmentSearchViewAutocomplete extends Fragment {
 
 
 
-    public void setSuggestionsListener(OnSearchedRestaurantAdded onSearchedRestaurantAdded) {
+    protected void setSuggestionsListener(OnSearchedRestaurantAdded onSearchedRestaurantAdded) {
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionClick(int position) {
-                Log.i("alex", "suggestion click");
                 Cursor cursor = (Cursor) mAdapter.getItem(position);
                 //String txt = cursor.getString(cursor.getColumnIndex("Restaurant Name"));
 
@@ -149,7 +142,6 @@ public abstract class FragmentSearchViewAutocomplete extends Fragment {
 
             @Override
             public boolean onSuggestionSelect(int position) {
-                Log.i("alex", "onsuggestionselect");
                 return true;
             }
         });

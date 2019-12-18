@@ -1,8 +1,6 @@
 package com.example.go4lunchAlx.data.restaurant_search;
 
 import android.content.Context;
-import android.util.Log;
-
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.models.Restaurant;
@@ -14,7 +12,6 @@ import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -41,12 +38,8 @@ public class RestaurantSearchedAdding {
         this.mContext = mContext;
         mPlacesClient = Places.createClient(mContext);
         service.addRestaurantToSearched(new Restaurant(restoId));
-        Log.i("alex", "addSearchedRestaurantToList");
-        Log.i("alex", "resto ID: " + restoId);
 
         Restaurant resto = service.getRestaurantById(restoId);
-
-        Log.i("alex", "resto: " + resto.getId());
 
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.OPENING_HOURS);
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(resto.getId(), placeFields);
@@ -55,8 +48,6 @@ public class RestaurantSearchedAdding {
             Place place = response.getPlace();
 
             resto.setName(place.getName());
-            Log.i("alex", "resto ID: " + place.getId());
-            Log.i("alex", "resto name: " + place.getName());
             resto.setVicinity(place.getAddress());
             LatLng location = place.getLatLng();
             resto.setLocation(place.getLatLng());
@@ -89,7 +80,6 @@ public class RestaurantSearchedAdding {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
                 int statusCode = apiException.getStatusCode();
-                Log.e("alex", "Place not found: " + exception.getMessage());
             }
         });
     }

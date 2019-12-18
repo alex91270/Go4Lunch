@@ -1,6 +1,5 @@
 package com.example.go4lunchAlx.viewmodel;
 
-import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -30,7 +29,6 @@ public class DataViewModel extends ViewModel {
 
     public void updateViewModel() {
         restoList.setValue(service.getRestaurants());
-        Log.i("alex", "updateViewModel");
     }
 }
 

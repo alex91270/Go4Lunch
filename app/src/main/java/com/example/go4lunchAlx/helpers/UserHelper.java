@@ -5,7 +5,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +35,7 @@ public class UserHelper {
     }
 
     // --- GET ---
+    /**
 
     public static Task<DocumentSnapshot> getUser(String uid){
         return UserHelper.getUsersCollection().document(uid).get();
@@ -52,6 +52,7 @@ public class UserHelper {
     public static Task<Void> deleteUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).delete();
     }
+    */
 
     // --- UPDATE ---
 

@@ -1,10 +1,7 @@
 package com.example.go4lunchAlx.data.firebase_data;
 
 import android.os.StrictMode;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.User;
@@ -35,7 +32,7 @@ public class GetFirebaseData {
        downloadUsers();
     }
 
-    public void downloadUsers() {
+    private void downloadUsers() {
         CollectionReference userRef = FirebaseFirestore.getInstance().collection("users");
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -49,13 +46,11 @@ public class GetFirebaseData {
                         if (!service.getFirebaseUsers().contains(user)) {
                             service.addFirebaseUser(user);
                         }
-
                     }
 
                     downloadRatings();
 
                 } else {
-                    Log.d("alex", "failure getting users");
                     result = "failure getting users";
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
                 }
@@ -82,7 +77,6 @@ public class GetFirebaseData {
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
 
                 } else {
-                    Log.d("alex", "failure getting ratings");
                     result = "failure getting ratings";
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
                 }

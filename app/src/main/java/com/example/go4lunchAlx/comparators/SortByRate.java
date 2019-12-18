@@ -1,7 +1,5 @@
 package com.example.go4lunchAlx.comparators;
 
-import android.util.Log;
-
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;

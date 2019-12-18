@@ -11,7 +11,6 @@ public class Restaurant {
     private String name;
     private List<String> attendants;
     private LatLng location;
-    //private double rating;
     private String vicinity;
     private String opening;
     @Nullable
@@ -33,7 +32,6 @@ public class Restaurant {
         this.name = name;
         this.photo = photo;
         this.location = location;
-        //this.rating = rating;
         this.vicinity = vicinity;
         this.opening = opening;
         this.distance = distance;
@@ -72,8 +70,6 @@ public class Restaurant {
         attendants.remove(name);
     }
 
-    public void clearAttendants() {attendants.clear();}
-
     public int getDistance() {
         return distance;
     }
@@ -87,12 +83,6 @@ public class Restaurant {
     public void setVicinity(String vicinity) {
         this.vicinity = vicinity;
     }
-
-    //public double getRating() {return rating;}
-
-    //public void setRating(double rating){
-       // this.rating = rating;
-    //}
 
     public String getOpening() {return opening;}
 

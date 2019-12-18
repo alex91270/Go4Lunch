@@ -1,7 +1,6 @@
 package com.example.go4lunchAlx.detail;
 
 import android.os.Bundle;
-import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.example.go4lunchAlx.R;
@@ -23,7 +22,6 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         restoId =  getIntent().getStringExtra("restoId");
-        Log.i("alex", "activity resto id: " + restoId);
 
         Bundle bundle = new Bundle();
         bundle.putString("restoId", restoId);

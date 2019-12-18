@@ -28,8 +28,9 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private Context mContext;
     private RestApiService service = DI.getRestApiService();
 
-    public ListRecyclerViewAdapter(List<Restaurant> items) {
+    public ListRecyclerViewAdapter(Context context, List<Restaurant> items) {
         mRestaurants = items;
+        mContext = context;
     }
 
 
@@ -61,7 +62,11 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         holder.mRestaurantAttendants.setText("(" + restaurant.getAttendants().size() + ")");
         holder.mRestaurantDistance.setText(restaurant.getDistance() + "m");
         holder.mRestaurantOpening.setText(restaurant.getOpening());
-        if (restaurant.getOpening().equals(mContext.getString(R.string.closing_soon))) holder.mRestaurantOpening.setTextColor(Color.RED);
+        if (restaurant.getOpening().equals(mContext.getString(R.string.closing_soon))) {
+            holder.mRestaurantOpening.setTextColor(Color.RED);
+        } else {
+            holder.mRestaurantOpening.setTextColor(Color.BLACK);
+        }
 
         holder.yellowBackground.getLayoutParams().width = ((int)(Math.round(service.getRate(restaurant)*0.2*holder.mStars.getLayoutParams().width))) ;
 
@@ -124,24 +129,6 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             ButterKnife.bind(this, view);
         }
     }
-
-    /**private int getRate(Restaurant restaurant) {
-
-        int numberRates = 0;
-        int totalRate = 0;
-        for (Rating rating : service.getListOfRatings()) {
-            if (rating.getRestaurantID().equals(restaurant.getId())){
-                totalRate+=rating.getRate();
-                numberRates+=1;
-            }
-        }
-
-        if (totalRate > 0) {
-            return totalRate / numberRates;
-        } else {
-            return 0;
-        }
-    }*/
 
     void updateRestos(@NonNull final List<Restaurant> restos) {
         this.mRestaurants = restos;

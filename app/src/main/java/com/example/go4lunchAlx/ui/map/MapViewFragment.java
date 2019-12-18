@@ -6,7 +6,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -75,17 +74,16 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         mContext = this.getActivity();
         apiKey = mContext.getString(R.string.google_maps_key);
 
+
+
         if (!Places.isInitialized()) {
-            Log.i("alex", "mapview initialise places");
             Places.initialize(mContext, apiKey);
         }
         DataViewModel dataViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
 
         dataViewModel.getRestoList().observe(this, new Observer<List<Restaurant>>() {
             public void onChanged(@Nullable List<Restaurant> restos) {
-                Log.i("alex", "mapview viewmodel has changed");
-                if (service.getAllRestaurants().size() > 0) placeMarkers();
-
+               if (service.getAllRestaurants().size() > 0) placeMarkers();
             }
         });
         getDatas = new GetDatas(dataViewModel);
@@ -115,9 +113,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
 
     @SuppressWarnings({"MissingPermission"})
-    public void getMap() {
-        Log.i("alex", "mapview getmap");
-
+    private void getMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map_widget);
         mapFragment.getMapAsync(this);
@@ -147,7 +143,6 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.i("alex", "mapview mapready");
         mMap = googleMap;
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(mContext, R.raw.mapstyle_retro);
         mMap.setMapStyle(style);

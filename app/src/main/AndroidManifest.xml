@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".main.MainActivity"
-            android:theme="@style/MainActTheme" />
+            android:theme="@style/MainActTheme"/>
         <activity
             android:name=".detail.DetailActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

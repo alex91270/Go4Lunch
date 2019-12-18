@@ -5,21 +5,17 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
-import android.util.Log;
-
 import androidx.core.app.NotificationCompat;
-
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.di.DI;
-import com.example.go4lunchAlx.main.MainActivity;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,22 +24,21 @@ public class NotificationsService extends FirebaseMessagingService {
     private final int NOTIFICATION_ID = 007;
     private final String NOTIFICATION_TAG = "GO4LUNCH";
     private RestApiService service = DI.getRestApiService();
-    SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yy");
-    User currentUser;
+    private SharedPreferences sharedPreferences;
+    private SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yy");
+    private User currentUser;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        /**if (remoteMessage.getNotification() != null) {
-            String message = remoteMessage.getNotification().getBody();
-            // 8 - Show notification after received message
-            Log.i("alex", message);
-            this.sendVisualNotification(message);
-        }*/
 
-        currentUser = service.getUserById(service.getCurrentUserId());
-        if (currentUser.getDateSelection()!= null && ft.format(new Date())
-                .equals(ft.format(new Date(currentUser.getDateSelection())))) {
-            sendVisualNotification();
+        sharedPreferences = getApplicationContext().getSharedPreferences("com.example.go4lunchAlx", Context.MODE_PRIVATE);
+
+        if (sharedPreferences.getString("notifPrefs", "on").equals("on")) {
+            currentUser = service.getUserById(service.getCurrentUserId());
+            if (currentUser.getDateSelection()!= null && ft.format(new Date())
+                    .equals(ft.format(new Date(currentUser.getDateSelection())))) {
+                sendVisualNotification();
+            }
         }
     }
 
@@ -81,7 +76,7 @@ public class NotificationsService extends FirebaseMessagingService {
 
         // 6 - Support Version >= Android 8
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = "Message provenant de Firebase";
+            CharSequence channelName = "Message Firebase";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);

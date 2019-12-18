@@ -1,10 +1,7 @@
 package com.example.go4lunchAlx.helpers;
 
 import android.content.Context;
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
-
 import com.example.go4lunchAlx.R;
 import com.google.android.libraries.places.api.model.Period;
 import java.util.Calendar;
@@ -53,7 +50,7 @@ public class OpeningHelper {
                     result = context.getString(R.string.opens_at) + period.getOpen().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
                 }
                 if (dateNow.getTime() > openingDate.getTime() && dateNow.getTime() < closingDate.getTime()) {
-                    result = context.getString(R.string.closes_at) + period.getClose().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
+                    result = context.getString(R.string.closes_at) + " " +  period.getClose().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
                     if ((closingDate.getTime() - dateNow.getTime()) < 900000) {
                         result = context.getString(R.string.closing_soon);
                     }

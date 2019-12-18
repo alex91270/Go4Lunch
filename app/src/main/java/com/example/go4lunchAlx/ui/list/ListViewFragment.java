@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -26,13 +23,9 @@ import com.example.go4lunchAlx.detail.DetailActivity;
 import com.example.go4lunchAlx.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
-import com.example.go4lunchAlx.signin.SigninActivity;
 import com.example.go4lunchAlx.ui.FragmentSearchViewAutocomplete;
-import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class ListViewFragment extends FragmentSearchViewAutocomplete {
 
@@ -59,7 +52,7 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         sharedPreferences = mContext.getSharedPreferences("com.example.go4lunchAlx", Context.MODE_PRIVATE);
-        myAdapter = new ListRecyclerViewAdapter(listDisplayed);
+        myAdapter = new ListRecyclerViewAdapter(mContext, listDisplayed);
         mRecyclerView.setAdapter(myAdapter);
         setAdapter();
 
@@ -88,7 +81,6 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("alex", "list on resume");
         if (myAdapter != null) {
             setAdapter();
             }
@@ -105,9 +97,7 @@ public class ListViewFragment extends FragmentSearchViewAutocomplete {
         listDisplayed.clear();
         listDisplayed.addAll(service.getAllRestaurants());
 
-        Log.i("alex", "shared preferences read: " + sharedPreferences.getString("sortPrefs", ""));
-
-        switch (sharedPreferences.getString("sortPrefs", "")) {
+       switch (sharedPreferences.getString("sortPrefs", "")) {
             case "0" :
                 Collections.sort(listDisplayed, new SortByDistance());
                 break;

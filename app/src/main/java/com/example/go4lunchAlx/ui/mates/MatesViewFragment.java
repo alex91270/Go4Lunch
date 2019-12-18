@@ -49,7 +49,7 @@ public class MatesViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        myAdapter = new MatesRecyclerViewAdapter(displayedList);
+        myAdapter = new MatesRecyclerViewAdapter(mContext, displayedList);
         mRecyclerView.setAdapter(myAdapter);
 
         return root;

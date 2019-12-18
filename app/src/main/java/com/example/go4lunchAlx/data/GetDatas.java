@@ -1,7 +1,7 @@
 package com.example.go4lunchAlx.data;
 
 import android.content.Context;
-import android.util.Log;
+//import android.util.Log;
 import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
 import com.example.go4lunchAlx.data.firebase_data.OnFirebaseDataReadyCallback;
@@ -64,7 +64,7 @@ public class GetDatas {
     }
 
 
-    public void getFirebaseData() {
+    private void getFirebaseData() {
             GetFirebaseData getFirebaseData = new GetFirebaseData(new OnFirebaseDataReadyCallback() {
                 @Override
                 public void onFirebaseDataReady(String result) {
@@ -75,12 +75,10 @@ public class GetDatas {
 
     }
 
-    public void mergeDatas() {
+    private void mergeDatas() {
 
         Restaurant selectedRestaurant;
         ArrayList<String> attendants = new ArrayList<>();
-
-
 
         for (User user: service.getFirebaseUsers()) {
             attendants.clear();
@@ -102,7 +100,7 @@ public class GetDatas {
         }
     }
 
-    public  void fetchRestaurantInfos(String restoId) {
+    private void fetchRestaurantInfos(String restoId) {
 
         Restaurant resto = service.getRestaurantById(restoId);
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.OPENING_HOURS);
@@ -145,12 +143,11 @@ public class GetDatas {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
                 int statusCode = apiException.getStatusCode();
-               Log.e("alex", "Place not found: " + exception.getMessage());
             }
         });    }
 
 
-    public int calculateDistance(LatLng StartP, LatLng EndP) {
+    private int calculateDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;// radius of earth in Km
         double lat1 = StartP.latitude;
         double lat2 = EndP.latitude;
@@ -166,11 +163,11 @@ public class GetDatas {
         return (int) Math.floor(Radius * c * 1000);
     }
 
-    public String getDayFromLong(Long dateLong) {
+    private String getDayFromLong(Long dateLong) {
         return ft.format(new Date(dateLong));
     }
 
-    public String getToday() {
+    private String getToday() {
         return ft.format(new Date());
     }
 }

@@ -30,6 +30,7 @@
     <string name="navigation_yourlunch">YOUR LUNCH</string>
     <string name="navigation_settings">SETTINGS</string>
     <string name="navigation_logout">LOGOUT</string>
+    <string name="navigation_logged_out">Logged out</string>
     <string name="notification_title">Lunch reminder</string>
     <string name="notification_body">See your selection for today</string>
     <string name="default_notification_channel_id">170177</string>
@@ -44,6 +45,7 @@
     <string name="detail_act_call">CALL</string>
     <string name="detail_act_like">LIKE</string>
     <string name="detail_act_web">WEBSITE</string>
+    <string name="detail_joining">is joining !</string>
 
     <!-- ALERT DIALOG -->
     <string name="alert_dialog_title">How much did you like that place?</string>
@@ -58,5 +60,17 @@
     <string name="closing_soon">Closing soon</string>
     <string name="closes_at">Closes at </string>
     <string name="opened_until">Opened until </string>
+
+    <!-- MATES VIEW -->
+    <string name="eats_at"> eats at </string>
+    <string name="not_decided"> has not decided yet</string>
+
+    <!-- SETTINGS -->
+    <string name="sort_of_list"> Sort of restaurant\'s list </string>
+    <string name="notifs"> Notifications</string>
+    <string name="sending_notifs"> Get daily notification</string>
+    <string name="sort_dist"> Sort by distance </string>
+    <string name="sort_rate"> Sort by rate</string>
+    <string name="sort_attendants"> Sort by attendants</string>
 
 </resources>

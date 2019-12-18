@@ -1,5 +1,6 @@
 package com.example.go4lunchAlx.ui.mates;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ public class MatesRecyclerViewAdapter extends RecyclerView.Adapter<MatesRecycler
 
     private List<User> mUsers;
     private String mWhereEats;
+    private Context mContext;
     private RestApiService service = DI.getRestApiService();
 
-    public MatesRecyclerViewAdapter(List<User> items) {
+    public MatesRecyclerViewAdapter(Context context, List<User> items) {
         mUsers = items;
+        mContext = context;
     }
 
 
@@ -43,11 +46,11 @@ public class MatesRecyclerViewAdapter extends RecyclerView.Adapter<MatesRecycler
 
         User user =mUsers.get(position);
 
-        mWhereEats = " has not yet decided";
+        mWhereEats = " " + mContext.getString(R.string.not_decided);
 
         for (Restaurant restaurant: service.getRestaurants()) {
             if(restaurant.getAttendants().contains(user.getUid())) {
-                mWhereEats = " eats at " + restaurant.getName();
+                mWhereEats = " " + mContext.getString(R.string.eats_at) + " " + restaurant.getName();
             }
         }
 
@@ -78,7 +81,7 @@ public class MatesRecyclerViewAdapter extends RecyclerView.Adapter<MatesRecycler
         public TextView mMateName;
 
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

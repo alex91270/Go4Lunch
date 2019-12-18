@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
@@ -41,7 +39,6 @@ public class DetailFragment extends Fragment {
     private Restaurant mRestaurant;
     private String mPhone;
     private Uri mWebsite;
-    //private String mAddress;
     private String mPicture;
     private PlacesClient mPlacesClient;
     private final int PERMISSION_REQUEST_CALL = 123;
@@ -91,7 +88,7 @@ public class DetailFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        myAdapter = new DetailRecyclerViewAdapter(mListAttendants);
+        myAdapter = new DetailRecyclerViewAdapter(context, mListAttendants);
         mRecyclerView.setAdapter(myAdapter);
 
         mRestaurantPhoto .setOnClickListener(new View.OnClickListener() {
@@ -150,14 +147,13 @@ public class DetailFragment extends Fragment {
     }
 
 
-    public void setValues(){
+    private void setValues(){
         textViewName.setText(mRestaurant.getName());
         textViewAddress.setText(mRestaurant.getVicinity());
         mPicture = mRestaurant.getPhoto();
         if (mPicture.equals("no_pic")) {
             mRestaurantPhoto.setImageResource(R.drawable.resto_sign300);
         } else {
-            Log.i("alex", "glide ");
             String apiKey = this.getString(R.string.google_maps_key);
             String photoURL = "https://maps.googleapis.com/maps/api/place/photo?photoreference=" + mRestaurant.getPhoto() + "&sensor=false&maxheight=300&maxwidth=300&key=" + apiKey;
 

@@ -29,7 +29,6 @@ import com.example.go4lunchAlx.ui.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showSettingsFragment();
                 break;
             case R.id.activity_main_drawer_logout:
-                Toast.makeText(this, "LOGOUT", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.navigation_logged_out), Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(this, SigninActivity.class));
                 break;
@@ -136,9 +135,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void configureToolBar(){
         toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.toolbar_title_hungry);
-    }
+        setSupportActionBar(toolbar);
+
+        }
 
     private void configureDrawerLayout(){
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(imageViewAvatar);
 
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     private void configureBottomView(){
@@ -206,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Generic method that will replace and show a fragment inside the MainActivity Frame Layout
     private void startTransactionFragment(Fragment fragment){
+
         if (!fragment.isVisible()){
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment).commit();
@@ -214,11 +214,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Show first fragment when activity is created
     private void showFirstFragment(){
-        toolbar.setTitle(R.string.toolbar_title_hungry);
         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_frame_layout);
         if (visibleFragment == null){
             showFragment(FRAGMENT_MAPVIEW);
-            navigationView.getMenu().getItem(0).setChecked(true);
+            //navigationView.getMenu().getItem(0).setChecked(true);
         }
     }
 }
