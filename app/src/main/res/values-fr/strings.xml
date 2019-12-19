@@ -1,0 +1,80 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+    <!-- FACEBOOK -->
+    <string name="app_name">Go4Lunch-alx</string>
+    <string name="facebook_app_id">2328560603927397</string>
+    <string name="facebook_login_protocol_scheme">fb2328560603927397</string>
+    <string name="facebook_application_id" translatable="false">2328560603927397</string>
+
+    <!-- MAIN ACTIVITY -->
+    <string name="error_not_connected">Vous devez être connecté !</string>
+    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
+    <string name="error_no_internet">Pas de connexion internet !</string>
+    <string name="error_unknown_error">Une erreur est survenue&#8230;</string>
+    <string name="connection_succeed">Authentification réussie !</string>
+    <string name="connection_failed">Echec de l\'authentification !</string>
+    <string name="button_login_text_logged">Voir le profil</string>
+    <string name="button_login_text_not_logged">Connexion</string>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <string name="title_map">Carte</string>
+    <string name="title_list">Liste</string>
+    <string name="title_mates">Collègues</string>
+    <string name="title_activity_maps">Carte</string>
+
+    <!-- NAVIGATION DRAWER -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_yourlunch">VOTRE DEJEUNER</string>
+    <string name="navigation_settings">REGLAGES</string>
+    <string name="navigation_logout">DECONNECTER</string>
+    <string name="navigation_logged_out">Déconnecté</string>
+    <string name="notification_title">Rappel de votre déjeuner</string>
+    <string name="notification_body">Voir votre sélection du jour</string>
+    <string name="default_notification_channel_id">170177</string>
+
+    <!-- TOOLBAR -->
+    <string name="toolbar_title_hungry">J\'ai faim!</string>
+    <string name="toolbar_title_mates">Collègues disponibles</string>
+    <string name="hint_search_mate">Chercher un collègue...</string>
+    <string name="hint_search_rest">Chercher un restaurant...</string>
+
+    <!-- DETAIL ACTIVITY -->
+    <string name="detail_act_call">APPEL</string>
+    <string name="detail_act_like">NOTER</string>
+    <string name="detail_act_web">SITE WEB</string>
+    <string name="detail_joining">y déjeune !</string>
+
+    <!-- ALERT DIALOG -->
+    <string name="alert_dialog_title">Qu\'avez vous pensé de ce restaurant?</string>
+    <string name="alert_dialog_button">NOTEZ LE !</string>
+
+    <!-- LIST VIEW -->
+    <string name="no_opening">Heures d\'ouverture inconnues</string>
+    <string name="opened247">Ouvert 24/7</string>
+    <string name="opens_at">Ouvre à </string>
+    <string name="now_closed">Actuellement fermé</string>
+    <string name="closed_today">Fermé aujourd\'hui</string>
+    <string name="closing_soon">Ferme bientôt</string>
+    <string name="closes_at">Ferme à </string>
+    <string name="opened_until">Ouvert jusqu\'à </string>
+
+    <!-- MATES VIEW -->
+    <string name="eats_at"> mange à </string>
+    <string name="not_decided"> n\'a pas encore décidé</string>
+
+    <!-- SETTINGS -->
+    <string name="sort_of_list"> Tri de la liste de restaurants </string>
+    <string name="notifs"> Notifications</string>
+    <string name="sending_notifs"> Recevoir une notification chaque jour</string>
+    <string name="sort_dist"> Tri par distance </string>
+    <string name="sort_rate"> Tri par note</string>
+    <string name="sort_attendants"> Tri par participants</string>
+
+    <!-- LOCATION PERMISSION -->
+    <string name="rationale_location">Cette application a besoin d\'avoir accès à votre localisation</string>
+    <string name="perm_denied">L\'application ne fonctionnera pas correctement tant que vous n\'aurez pas autorisé l\accès à la position de cet appareil dans vos réglages</string>
+
+</resources>

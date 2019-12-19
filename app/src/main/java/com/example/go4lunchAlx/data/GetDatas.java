@@ -31,10 +31,8 @@ public class GetDatas {
     private RestApiService service = DI.getRestApiService();
     SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yy");
     private PlacesClient mPlacesClient;
-    //private List<Restaurant> allRestaurantsWithInfo = new ArrayList<>();
     private Context mContext;
     private DataViewModel dataViewModel;
-    //private List<Restaurant> AllRestaurantsWithIdOnly;
     private Calendar calendar;
     private Date date;
 
