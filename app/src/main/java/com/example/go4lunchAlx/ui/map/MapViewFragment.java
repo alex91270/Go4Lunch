@@ -1,5 +1,6 @@
 package com.example.go4lunchAlx.ui.map;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
@@ -41,7 +43,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import java.util.List;
 
-public class MapViewFragment extends FragmentSearchViewAutocomplete implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class MapViewFragment extends FragmentSearchViewAutocomplete implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, EasyPermissions.PermissionCallbacks {
     private Context mContext;
     private GoogleMap mMap;
     private LocationManager locationManager;
@@ -55,6 +59,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
     private OnSearchedRestaurantAdded onSearchedRestaurantAdded;
     private InputMethodManager imm;
     private boolean afterResearch;
+    private final int RC_LOCATION_PERM = 123;
 
     public static MapViewFragment newInstance() {
         return (new MapViewFragment());
@@ -96,19 +101,19 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        getMap();
+
+        if (hasLocationPermission()) {
+            getMap();
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_location), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         super.setSuggestionsListener(onSearchedRestaurantAdded);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //if (service.getRestaurants().size() > 0) placeMarkers();
     }
 
 
@@ -221,4 +226,27 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
         return false;
     }
+
+    private Boolean hasLocationPermission() {
+        return EasyPermissions
+                .hasPermissions(mContext, Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        getMap();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Toast.makeText(mContext, getString(R.string.perm_denied), Toast.LENGTH_LONG).show();
+    }
+
 }

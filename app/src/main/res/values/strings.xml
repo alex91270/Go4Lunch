@@ -73,4 +73,8 @@
     <string name="sort_rate"> Sort by rate</string>
     <string name="sort_attendants"> Sort by attendants</string>
 
+    <!-- LOCATION PERMISSION -->
+    <string name="rationale_location">This app needs access to your location to find restaurants nearby</string>
+    <string name="perm_denied">The app won\'t run correctly until you manually add the location permission in your device settings</string>
+
 </resources>

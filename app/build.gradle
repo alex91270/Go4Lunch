@@ -81,5 +81,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 
-}
+    //EASY PERMISSIONS
+    implementation 'pub.devrel:easypermissions:3.0.0'
+
+    }
+
 apply plugin: 'com.google.gms.google-services'

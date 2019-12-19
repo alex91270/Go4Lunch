@@ -73,7 +73,7 @@ public class SigninActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
-            else { // ERROR LOGUING
+            else { // ERROR LOGGING
                 showSnackBar(this.constraintLayout, getString(R.string.connection_failed));
                 startSignInActivity();
             }
