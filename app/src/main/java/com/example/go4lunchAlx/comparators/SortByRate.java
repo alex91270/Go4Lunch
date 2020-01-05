@@ -1,6 +1,6 @@
 package com.example.go4lunchAlx.comparators;
 
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
 

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;

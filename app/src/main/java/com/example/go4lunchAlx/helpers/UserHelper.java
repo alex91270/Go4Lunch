@@ -2,7 +2,6 @@ package com.example.go4lunchAlx.helpers;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import java.util.Date;
@@ -33,26 +32,6 @@ public class UserHelper {
                 .set(data, SetOptions.merge());
 
     }
-
-    // --- GET ---
-    /**
-
-    public static Task<DocumentSnapshot> getUser(String uid){
-        return UserHelper.getUsersCollection().document(uid).get();
-    }
-
-    // --- UPDATE ---
-
-    public static Task<Void> updateUsername(String username, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("username", username);
-    }
-
-    // --- DELETE ---
-
-    public static Task<Void> deleteUser(String uid) {
-        return UserHelper.getUsersCollection().document(uid).delete();
-    }
-    */
 
     // --- UPDATE ---
 

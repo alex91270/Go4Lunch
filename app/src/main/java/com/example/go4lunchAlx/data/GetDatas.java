@@ -1,17 +1,19 @@
 package com.example.go4lunchAlx.data;
 
 import android.content.Context;
-//import android.util.Log;
+import android.widget.Toast;
+
+import com.example.go4lunchAlx.helpers.DistanceHelper;
 import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
 import com.example.go4lunchAlx.data.firebase_data.OnFirebaseDataReadyCallback;
 import com.example.go4lunchAlx.data.nearby_places.GetNearbyPlaces;
 import com.example.go4lunchAlx.data.nearby_places.OnNearbyPlacesReadyCallback;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
-import com.example.go4lunchAlx.viewmodel.DataViewModel;
+import com.example.go4lunchAlx.data.viewmodel.DataViewModel;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
@@ -35,6 +37,7 @@ public class GetDatas {
     private DataViewModel dataViewModel;
     private Calendar calendar;
     private Date date;
+    private DistanceHelper distanceHelper = new DistanceHelper();
 
     public GetDatas(DataViewModel dataViewModel){
         this.dataViewModel = dataViewModel;
@@ -55,6 +58,7 @@ public class GetDatas {
         GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces(new OnNearbyPlacesReadyCallback() {
             @Override
             public void OnNearbyPlacesReady(String result) {
+                //Toast.makeText(mContext, "got nearby places", Toast.LENGTH_LONG).show();
                 getFirebaseData();
             }
         });
@@ -127,7 +131,7 @@ public class GetDatas {
             }
             resto.setOpening(opening);
 
-            int distance = calculateDistance(service.getCurrentLocation(), location);
+            int distance = distanceHelper.calculateDistance(service.getCurrentLocation(), location);
             resto.setDistance(distance);
 
             if (resto.getAttendants()==null) resto.setAttendants(new ArrayList<>());
@@ -143,23 +147,6 @@ public class GetDatas {
                 int statusCode = apiException.getStatusCode();
             }
         });    }
-
-
-    private int calculateDistance(LatLng StartP, LatLng EndP) {
-        int Radius = 6371;// radius of earth in Km
-        double lat1 = StartP.latitude;
-        double lat2 = EndP.latitude;
-        double lon1 = StartP.longitude;
-        double lon2 = EndP.longitude;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
-                * Math.sin(dLon / 2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        return (int) Math.floor(Radius * c * 1000);
-    }
 
     private String getDayFromLong(Long dateLong) {
         return ft.format(new Date(dateLong));

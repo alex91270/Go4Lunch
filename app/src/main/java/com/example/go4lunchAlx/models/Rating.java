@@ -27,10 +27,6 @@ public class Rating {
     @Override
     public boolean equals(Object o) {
         Rating rating = (Rating) o;
-        if (restaurantID.equals(rating.getRestaurantID()) && userID.equals(rating.getUserID())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (restaurantID.equals(rating.getRestaurantID()) && userID.equals(rating.getUserID()));
     }
 }

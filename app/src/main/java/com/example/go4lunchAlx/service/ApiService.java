@@ -36,6 +36,8 @@ public interface ApiService {
 
     void clearRestaurants();
 
+    void clearSearchedRestaurants();
+
     void updateRestaurant(Restaurant restaurant);
 
     void updateSearchedRestaurant(Restaurant restaurant);

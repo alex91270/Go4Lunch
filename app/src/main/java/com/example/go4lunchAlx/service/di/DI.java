@@ -1,4 +1,4 @@
-package com.example.go4lunchAlx.di;
+package com.example.go4lunchAlx.service.di;
 
 import com.example.go4lunchAlx.service.RestApiService;
 

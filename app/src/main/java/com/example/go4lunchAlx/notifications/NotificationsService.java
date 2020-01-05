@@ -10,8 +10,8 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import com.example.go4lunchAlx.R;
-import com.example.go4lunchAlx.detail.DetailActivity;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.ui.detail.DetailActivity;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -31,7 +31,8 @@ public class NotificationsService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("com.example.go4lunchAlx", Context.MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(
+                "com.example.go4lunchAlx", Context.MODE_PRIVATE);
 
         if (sharedPreferences.getString("notifPrefs", "on").equals("on")) {
             currentUser = service.getUserById(service.getCurrentUserId());

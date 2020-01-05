@@ -1,4 +1,4 @@
-package com.example.go4lunchAlx.detail;
+package com.example.go4lunchAlx.ui.detail;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecyclerViewAdapter.ViewHolder> {
 
-    private final List<User> mWorkmates;
+    private List<User> mWorkmates;
     private Context mContext;
 
     DetailRecyclerViewAdapter(Context context, List<User> items) {
@@ -44,6 +44,8 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
         User user = mWorkmates.get(position);
 
         if (user.getUrlPicture() == "no_pic" || user.getUrlPicture() == null) {
+            //TODO
+            //user.getUrlPicture()?....
             holder.mWorkmatePicture.setImageResource(R.drawable.avatar);
         } else {
             Glide.with(holder.mWorkmatePicture.getContext())
@@ -73,5 +75,10 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
             super(view);
             ButterKnife.bind(this, view);
         }
+    }
+
+    void updateAttendants(@NonNull final List<User> mates) {
+        this.mWorkmates = mates;
+        notifyDataSetChanged();
     }
 }

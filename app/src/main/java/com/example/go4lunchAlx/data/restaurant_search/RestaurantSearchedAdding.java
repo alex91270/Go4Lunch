@@ -1,7 +1,8 @@
 package com.example.go4lunchAlx.data.restaurant_search;
 
 import android.content.Context;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.helpers.DistanceHelper;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
@@ -27,6 +28,7 @@ public class RestaurantSearchedAdding {
     private RestApiService service = DI.getRestApiService();
     private Date date;
     private Calendar calendar;
+    private DistanceHelper distanceHelper = new DistanceHelper();
 
     public RestaurantSearchedAdding(OnSearchedRestaurantAdded onSearchedRestaurantAdded) {
         this.onSearchedRestaurantAdded = onSearchedRestaurantAdded;
@@ -67,7 +69,7 @@ public class RestaurantSearchedAdding {
             }
             resto.setOpening(opening);
 
-            int distance = calculateDistance(service.getCurrentLocation(), location);
+            int distance = distanceHelper.calculateDistance(service.getCurrentLocation(), location);
             resto.setDistance(distance);
 
             if (resto.getAttendants()==null) resto.setAttendants(new ArrayList<>());
@@ -82,21 +84,5 @@ public class RestaurantSearchedAdding {
                 int statusCode = apiException.getStatusCode();
             }
         });
-    }
-
-    public int calculateDistance(LatLng StartP, LatLng EndP) {
-        int Radius = 6371;// radius of earth in Km
-        double lat1 = StartP.latitude;
-        double lat2 = EndP.latitude;
-        double lon1 = StartP.longitude;
-        double lon2 = EndP.longitude;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
-                * Math.sin(dLon / 2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        return (int) Math.floor(Radius * c * 1000);
     }
 }

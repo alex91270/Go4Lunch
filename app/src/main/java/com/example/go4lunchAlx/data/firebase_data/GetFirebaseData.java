@@ -2,7 +2,9 @@ package com.example.go4lunchAlx.data.firebase_data;
 
 import android.os.StrictMode;
 import androidx.annotation.NonNull;
-import com.example.go4lunchAlx.di.DI;
+
+import com.example.go4lunchAlx.helpers.ResultCode;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
@@ -17,17 +19,27 @@ public class GetFirebaseData {
 
     private OnFirebaseDataReadyCallback onFirebaseDataReadyCallback;
     private static String result;
-
     private RestApiService service = DI.getRestApiService();
+    private ResultCode resultCode;
 
     public GetFirebaseData(OnFirebaseDataReadyCallback onFirebaseDataReadyCallback) {
         this.onFirebaseDataReadyCallback = onFirebaseDataReadyCallback;
     }
 
     public void downloadDataFromFirebase() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+       //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build();
+
         StrictMode.setThreadPolicy(policy);
+
+
         result = "success";
+        //result = ResultCode.Result.valueOf("SUCCESS");
 
        downloadUsers();
     }

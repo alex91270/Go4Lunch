@@ -37,10 +37,4 @@ public class RatingsHelper {
         return RatingsHelper.getRatingsCollection().document(rID).update("rate", rate);
     }
 
-    // --- DELETE ---
-
-    public static Task<Void> deleteRate(String rID) {
-        return RatingsHelper.getRatingsCollection().document(rID).delete();
-    }
-
 }

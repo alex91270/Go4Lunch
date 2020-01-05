@@ -97,12 +97,7 @@ public class Restaurant {
     @Override
     public boolean equals(Object o) {
         Restaurant resto = (Restaurant) o;
-        if (id.equals(resto.getId())) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return (id.equals(resto.getId()));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.go4lunchAlx.detail;
+package com.example.go4lunchAlx.ui.detail;
 
 import android.Manifest;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -23,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.helpers.UserHelper;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
@@ -42,7 +41,6 @@ public class DetailFragment extends Fragment {
     private String mPicture;
     private PlacesClient mPlacesClient;
     private final int PERMISSION_REQUEST_CALL = 123;
-    private AlertDialog dialog = null;
     private Context context;
     private TextView textViewName;
     private TextView textViewAddress;
@@ -53,6 +51,9 @@ public class DetailFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DetailRecyclerViewAdapter myAdapter;
     private List<User> mListAttendants;
+    private TextView textViewCall;
+    private TextView textViewLike;
+    private TextView textViewWeb;
 
     public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
@@ -72,13 +73,16 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        Context context = view.getContext();
+        context = view.getContext();
         mPlacesClient = Places.createClient(context);
         textViewName = view.findViewById(R.id.restaurant_name);
         textViewAddress = view.findViewById(R.id.restaurant_address);
         mRestaurantPhoto = view.findViewById(R.id.restaurant_picture);
         mRecyclerView = view.findViewById(R.id.list_attendants);
         fab = view.findViewById(R.id.FABselect);
+        textViewCall = view.findViewById(R.id.textViewCall);
+        textViewLike = view.findViewById(R.id.textViewLike);
+        textViewWeb = view.findViewById(R.id.textViewWebsite);
 
         mListAttendants = new ArrayList<>();
         for (String userId : mRestaurant.getAttendants()) {
@@ -91,55 +95,41 @@ public class DetailFragment extends Fragment {
         myAdapter = new DetailRecyclerViewAdapter(context, mListAttendants);
         mRecyclerView.setAdapter(myAdapter);
 
-        mRestaurantPhoto .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mRestaurantPhoto .setOnClickListener((View v) -> {
                 DialogFragment myDialogFragment = new LikeDialogFragment();
                 myDialogFragment.show(getFragmentManager(), "dialog");
-            }
         });
 
         ImageView imageViewCall = view.findViewById(R.id.imageViewCall);
-        imageViewCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.CALL_PHONE},
-                            PERMISSION_REQUEST_CALL);
-                } else {
-                    dialPhoneNumber();
-                }
-            }
+        imageViewCall.setOnClickListener((View v) -> {
+               callIt();
         });
+        textViewCall.setOnClickListener((View v) -> {
+            callIt();
+        });
+
         ImageView imageViewLike = view.findViewById(R.id.imageViewLike);
-        imageViewLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment myDialogFragment = new LikeDialogFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("restoId", restoId);
-                myDialogFragment.setArguments(bundle);
-                myDialogFragment.show(getFragmentManager(), "dialog");
-            }
+        imageViewLike.setOnClickListener((View v) -> {
+               rateIt();
         });
+        textViewLike.setOnClickListener((View v) -> {
+            rateIt();
+        });
+
         ImageView imageViewWebsite = view.findViewById(R.id.imageViewWebsite);
-        imageViewWebsite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, mWebsite);
-                startActivity(browserIntent);
-            }
+        imageViewWebsite.setOnClickListener((View v) -> {
+                visitIt();
+        });
+        textViewWeb.setOnClickListener((View v) -> {
+            visitIt();
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        fab.setOnClickListener((View v) -> {
                 UserHelper.updateSelectedRestaurant(service.getCurrentUserId(), restoId);
                 updateLocally();
-                Toast.makeText(context, "Restaurant selectionné", Toast.LENGTH_SHORT).show();
-            }
+                mListAttendants.add(service.getCurrentUser());
+                myAdapter.updateAttendants(mListAttendants);
+                Toast.makeText(context, getString(R.string.selected), Toast.LENGTH_SHORT).show();
         });
         setValues();
 
@@ -164,6 +154,30 @@ public class DetailFragment extends Fragment {
         }
     }
 
+    private void callIt(){
+        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    PERMISSION_REQUEST_CALL);
+        } else {
+            dialPhoneNumber();
+        }
+    }
+
+    private void rateIt() {
+        DialogFragment myDialogFragment = new LikeDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("restoId", restoId);
+        myDialogFragment.setArguments(bundle);
+        myDialogFragment.show(getFragmentManager(), "dialog");
+    }
+
+    private void visitIt() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, mWebsite);
+        startActivity(browserIntent);
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -187,19 +201,20 @@ public class DetailFragment extends Fragment {
     }
 
     private void updateLocally() {
+        User currentUser = service.getUserById(service.getCurrentUserId());
+
         //add current user to this restaurant's attendant's list
-        service.addAttendantToRestaurant(restoId, service.getCurrentUserId());
+        service.addAttendantToRestaurant(restoId, currentUser.getUid());
 
-        if(service.getUserById(service.getCurrentUserId()).getSelectedRestaurant() != null) {
+        if(currentUser.getSelectedRestaurant() != null) {
 
-            String previousSelection = service.getUserById(service.getCurrentUserId()).getSelectedRestaurant();
+            String previousSelection = currentUser.getSelectedRestaurant();
 
             //remove current user from previously selected restaurant attendants list
-            service.removeAttendantFromRestaurant(service.getCurrentUserId(), previousSelection);
-
+            service.removeAttendantFromRestaurant(currentUser.getUid(), previousSelection);
 
             //update the selected restaurant of the current user in the service list
-            service.setUserSelectedRestaurant(service.getCurrentUserId(), restoId);
+            service.setUserSelectedRestaurant(currentUser.getUid(), restoId);
         }
     }
 }

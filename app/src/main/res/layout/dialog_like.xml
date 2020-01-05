@@ -13,7 +13,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="How did you appreciate that place?"
+        android:text="@string/alert_dialog_title"
         android:textAlignment="center" />
 
     <View
@@ -78,5 +78,5 @@
         android:id="@+id/buttonRate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Rate it !" />
+        android:text="@string/alert_dialog_button" />
 </LinearLayout>

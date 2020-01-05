@@ -1,5 +1,7 @@
 package com.example.go4lunchAlx.service;
 
+import android.util.Log;
+
 import com.example.go4lunchAlx.models.Rating;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.models.User;
@@ -112,12 +114,19 @@ public class RestApiService implements ApiService {
 
     @Override
     public void updateSearchedRestaurant(Restaurant restaurant) {
-        restaurantsSearched.set(restaurantsSearched.indexOf(restaurant), restaurant);
+        if (restaurantsSearched.indexOf(restaurant) != -1) {
+            restaurantsSearched.set(restaurantsSearched.indexOf(restaurant), restaurant);
+        }
     }
 
     @Override
     public void clearRestaurants() {
         restaurants.clear();
+    }
+
+    @Override
+    public void clearSearchedRestaurants() {
+        restaurantsSearched.clear();
     }
 
     @Override
@@ -149,6 +158,7 @@ public class RestApiService implements ApiService {
 
     @Override
     public void updateRating(Rating rating) {
+        Log.i("alex", "index: " + listOfRatings.indexOf(rating) );
         listOfRatings.set(listOfRatings.indexOf(rating), rating);
     }
 
@@ -202,7 +212,11 @@ public class RestApiService implements ApiService {
         int numberRates = 0;
         int totalRate = 0;
         for (Rating rating : listOfRatings) {
+            Log.i("alex", "rating id: " + rating.getrID());
+            Log.i("alex", "resto: " + rating.getRestaurantID());
+            Log.i("alex", "rate: " + rating.getRate());
             if (rating.getRestaurantID().equals(restaurant.getId())){
+                Log.i("alex", "rating found, rate is: " + rating.getRate());
                 totalRate+=rating.getRate();
                 numberRates+=1;
             }

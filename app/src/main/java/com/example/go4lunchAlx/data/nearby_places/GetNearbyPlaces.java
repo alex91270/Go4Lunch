@@ -2,7 +2,7 @@ package com.example.go4lunchAlx.data.nearby_places;
 
 import android.os.StrictMode;
 import android.util.Log;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.google.android.gms.maps.model.LatLng;

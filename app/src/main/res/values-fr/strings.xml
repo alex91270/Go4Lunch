@@ -34,6 +34,7 @@
     <string name="notification_title">Rappel de votre déjeuner</string>
     <string name="notification_body">Voir votre sélection du jour</string>
     <string name="default_notification_channel_id">170177</string>
+    <string name="no_selection">Pas encore de restaurant sélectionné aujourd\'hui !</string>
 
     <!-- TOOLBAR -->
     <string name="toolbar_title_hungry">J\'ai faim!</string>
@@ -46,6 +47,7 @@
     <string name="detail_act_like">NOTER</string>
     <string name="detail_act_web">SITE WEB</string>
     <string name="detail_joining">y déjeune !</string>
+    <string name="selected">Restaurant selectionné</string>
 
     <!-- ALERT DIALOG -->
     <string name="alert_dialog_title">Qu\'avez vous pensé de ce restaurant?</string>

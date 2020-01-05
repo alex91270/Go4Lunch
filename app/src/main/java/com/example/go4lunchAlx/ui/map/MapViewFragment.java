@@ -21,12 +21,12 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.data.GetDatas;
 import com.example.go4lunchAlx.data.restaurant_search.OnSearchedRestaurantAdded;
-import com.example.go4lunchAlx.detail.DetailActivity;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.ui.detail.DetailActivity;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.example.go4lunchAlx.ui.FragmentSearchViewAutocomplete;
-import com.example.go4lunchAlx.viewmodel.DataViewModel;
+import com.example.go4lunchAlx.data.viewmodel.DataViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -189,7 +189,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
         if (mMap != null) {
             mMap.clear();
-        }
+
 
         int maxDistance = 0;
 
@@ -201,7 +201,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
                 mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName())
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_red_s)));
             } else {
-                if (r.getLocation() != null) {
+                if (r.getLocation() != null && mMap != null) {
                     mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_green_s)));
                 }
@@ -214,6 +214,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
                     .get(service.getAllRestaurants().size() - 1).getLocation(), 20));
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, zoomValue)); //between 1 and 20
+        }
         }
     }
 
@@ -237,7 +238,6 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
-
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {

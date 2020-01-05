@@ -1,4 +1,4 @@
-package com.example.go4lunchAlx.main;
+package com.example.go4lunchAlx.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,8 +18,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunchAlx.R;
-import com.example.go4lunchAlx.detail.DetailActivity;
-import com.example.go4lunchAlx.di.DI;
+import com.example.go4lunchAlx.ui.detail.DetailActivity;
+import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.User;
 import com.example.go4lunchAlx.service.RestApiService;
 import com.example.go4lunchAlx.signin.SigninActivity;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, getString(R.string.navigation_logged_out), Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(this, SigninActivity.class));
+                finish();
                 break;
             case R.id.action_mapview:
                 toolbar.setTitle(R.string.toolbar_title_hungry);
@@ -170,14 +172,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showYourlunchFragment(){
         User currentUser = service.getUserById(service.getCurrentUserId());
+        Log.i("alex", "main name: " + currentUser.getUsername());
+        Log.i("alex", "main date selection: " + currentUser.getDateSelection());
+        Log.i("alex", "main selected restaurant: " + currentUser.getSelectedRestaurant());
         if (currentUser.getDateSelection()!= null && ft.format(new Date())
-                .equals(ft.format(new Date(currentUser.getDateSelection())))) {
+                .equals(ft.format(new Date(currentUser.getDateSelection()))) &&
+        currentUser.getSelectedRestaurant() != null) {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra("restoId", currentUser
                     .getSelectedRestaurant());
             this.startActivity(intent);
         } else {
-            Toast.makeText(this, "No restaurant selected yet for today !", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.no_selection), Toast.LENGTH_LONG).show();
         }
 
     }

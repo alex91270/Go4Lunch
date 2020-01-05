@@ -39,11 +39,7 @@ public class User {
     @Override
     public boolean equals(Object o) {
         User user = (User) o;
-        if (uid.equals(user.getUid())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (uid.equals(user.getUid()));
     }
 }
 
