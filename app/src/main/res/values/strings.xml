@@ -79,4 +79,11 @@
     <string name="rationale_location">This app needs access to your location to find restaurants nearby</string>
     <string name="perm_denied">The app won\'t run correctly until you manually add the location permission in your device settings</string>
 
+    <!-- ERRORS -->
+    <string name="failure_users">Failed to retrieve users data</string>
+    <string name="failure_ratings">Failed to retrieve restaurant\'s ratings</string>
+    <string name="error_api_url">Error in the Google Places request</string>
+    <string name="error_connecting_api">Failed to connect to Google Places service</string>
+    <string name="error_processing_result">Failed to process the restaurants found</string>
+
 </resources>

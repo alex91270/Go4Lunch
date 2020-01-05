@@ -79,4 +79,10 @@
     <string name="rationale_location">Cette application a besoin d\'avoir accès à votre localisation</string>
     <string name="perm_denied">L\'application ne fonctionnera pas correctement tant que vous n\'aurez pas autorisé l\accès à la position de cet appareil dans vos réglages</string>
 
+    <!-- ERRORS -->
+    <string name="failure_users">Echec de la récupération des données des utilisateurs</string>
+    <string name="failure_ratings">Echec de la récupération des notations</string>
+    <string name="error_api_url">Erreur dans la requête à Google Places</string>
+    <string name="error_connecting_api">Echec de la connexion à Google Places</string>
+    <string name="error_processing_result">Erreur dans le traitement des restaurants trouvés</string>
 </resources>

@@ -52,7 +52,7 @@ public class SettingsFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        spinner.setSelection(Integer.valueOf(sharedPreferences.getString("sortPrefs", "")));
+        spinner.setSelection(Integer.valueOf(sharedPreferences.getString("sortPrefs", "1")));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

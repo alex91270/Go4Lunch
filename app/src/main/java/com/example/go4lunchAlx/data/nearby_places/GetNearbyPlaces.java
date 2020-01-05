@@ -1,7 +1,10 @@
 package com.example.go4lunchAlx.data.nearby_places;
 
+import android.content.res.Resources;
 import android.os.StrictMode;
 import android.util.Log;
+
+import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Restaurant;
 import com.example.go4lunchAlx.service.RestApiService;
@@ -22,7 +25,7 @@ public class GetNearbyPlaces {
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_SEARCH = "/nearbysearch";
     private static final String OUT_JSON = "/json?";
-    private static final String LOG_TAG = "ListRest";
+    private static final String LOG_TAG = "Go4Lunch";
     private RestApiService service = DI.getRestApiService();
     private LatLng location;
 
@@ -60,10 +63,10 @@ public class GetNearbyPlaces {
             }
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error processing Places API URL", e);
-            result = "Error processing Places API URL";
+            result = Resources.getSystem().getString(R.string.error_api_url);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error connecting to Places API", e);
-            result = "Error connecting to Places API";
+            result = Resources.getSystem().getString(R.string.error_connecting_api);
         } finally {
             if (conn != null) {
                 conn.disconnect();
@@ -81,7 +84,7 @@ public class GetNearbyPlaces {
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error processing JSON results", e);
-            result = "Error processing JSON result";
+            result = Resources.getSystem().getString(R.string.error_processing_result);
         }
 
         onNearbyPlacesReadyCallback.OnNearbyPlacesReady(result);
@@ -96,7 +99,7 @@ public class GetNearbyPlaces {
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e(LOG_TAG, "Error processing JSON results", e);
-            result = "Error extracting JSON restaurant";
+            result = Resources.getSystem().getString(R.string.error_processing_result);
         }
 
         return null;

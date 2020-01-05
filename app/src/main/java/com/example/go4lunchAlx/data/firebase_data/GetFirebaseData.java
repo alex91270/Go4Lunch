@@ -1,8 +1,12 @@
 package com.example.go4lunchAlx.data.firebase_data;
 
+import android.content.res.Resources;
 import android.os.StrictMode;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.helpers.ResultCode;
 import com.example.go4lunchAlx.service.di.DI;
 import com.example.go4lunchAlx.models.Rating;
@@ -21,25 +25,17 @@ public class GetFirebaseData {
     private static String result;
     private RestApiService service = DI.getRestApiService();
     private ResultCode resultCode;
+    private static final String LOG_TAG = "Go4Lunch";
 
     public GetFirebaseData(OnFirebaseDataReadyCallback onFirebaseDataReadyCallback) {
         this.onFirebaseDataReadyCallback = onFirebaseDataReadyCallback;
     }
 
     public void downloadDataFromFirebase() {
-       //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build();
-
-        StrictMode.setThreadPolicy(policy);
-
+       StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+       StrictMode.setThreadPolicy(policy);
 
         result = "success";
-        //result = ResultCode.Result.valueOf("SUCCESS");
 
        downloadUsers();
     }
@@ -63,7 +59,8 @@ public class GetFirebaseData {
                     downloadRatings();
 
                 } else {
-                    result = "failure getting users";
+                    result = Resources.getSystem().getString(R.string.failure_users);
+                    Log.e(LOG_TAG, "Failed getting users");
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
                 }
             }
@@ -89,7 +86,7 @@ public class GetFirebaseData {
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
 
                 } else {
-                    result = "failure getting ratings";
+                    result = Resources.getSystem().getString(R.string.failure_ratings);
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);
                 }
             }

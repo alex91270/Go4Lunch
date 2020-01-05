@@ -2,7 +2,6 @@ package com.example.go4lunchAlx.data;
 
 import android.content.Context;
 import android.widget.Toast;
-
 import com.example.go4lunchAlx.helpers.DistanceHelper;
 import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
@@ -58,7 +57,8 @@ public class GetDatas {
         GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces(new OnNearbyPlacesReadyCallback() {
             @Override
             public void OnNearbyPlacesReady(String result) {
-                //Toast.makeText(mContext, "got nearby places", Toast.LENGTH_LONG).show();
+                if (!result.equals("success")) {
+                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();}
                 getFirebaseData();
             }
         });
@@ -70,6 +70,8 @@ public class GetDatas {
             GetFirebaseData getFirebaseData = new GetFirebaseData(new OnFirebaseDataReadyCallback() {
                 @Override
                 public void onFirebaseDataReady(String result) {
+                    if (!result.equals("success")) {
+                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();}
                     mergeDatas();
                 }
             });
