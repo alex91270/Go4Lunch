@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DistanceHelper {
 
+    //calculates the distance between two points defined by their latitude and longitude
+
     public int calculateDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;// radius of earth in Km
         double lat1 = StartP.latitude;

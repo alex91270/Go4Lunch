@@ -1,5 +1,7 @@
 package com.example.go4lunchAlx.models;
 
+import android.net.Uri;
+
 import androidx.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ public class Restaurant {
     @Nullable
     private String photo;
     private int distance;
+    private String phoneNumber;
+    private Uri website;
 
     public Restaurant(String id) {
         this.id = id;
@@ -27,7 +31,7 @@ public class Restaurant {
         this.attendants = attendants;
     }
 
-    public Restaurant(String id, String name, String photo, LatLng location, String vicinity, String opening, int distance) {
+    public Restaurant(String id, String name, String photo, LatLng location, String vicinity, String opening, int distance, String phone, Uri website) {
         this.id = id;
         this.name = name;
         this.photo = photo;
@@ -36,6 +40,8 @@ public class Restaurant {
         this.opening = opening;
         this.distance = distance;
         this.attendants = new ArrayList<>();
+        this.phoneNumber = phone;
+        this.website = website;
     }
 
     public String getId() {return id;}
@@ -93,6 +99,14 @@ public class Restaurant {
     public void setAttendants(ArrayList<String> attendants) {
         this.attendants = attendants;
     }
+
+    public void setPhoneNumber(String phone){phoneNumber = phone;}
+
+    public String getPhoneNumber() {return phoneNumber;}
+
+    public void setWebsite(Uri website) {this.website = website;}
+
+    public Uri getWebsite() {return website;}
 
     @Override
     public boolean equals(Object o) {

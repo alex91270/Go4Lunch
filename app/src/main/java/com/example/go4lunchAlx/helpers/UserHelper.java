@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+//all CRUD methods to interact with the Firebase users table
+
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";

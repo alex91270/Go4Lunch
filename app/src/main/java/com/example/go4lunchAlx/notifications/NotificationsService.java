@@ -19,6 +19,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//class to manage the reception of notifications
 public class NotificationsService extends FirebaseMessagingService {
 
     private final int NOTIFICATION_ID = 007;
@@ -30,6 +31,8 @@ public class NotificationsService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+        //if the user chose to get the notifications,  the message is transmitted to a visual notification
 
         sharedPreferences = getApplicationContext().getSharedPreferences(
                 "com.example.go4lunchAlx", Context.MODE_PRIVATE);

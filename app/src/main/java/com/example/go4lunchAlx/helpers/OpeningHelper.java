@@ -17,7 +17,8 @@ public class OpeningHelper {
     private Date closingDate;
     private Calendar calendar;
 
-
+    //processes the list of Period returned by the fetchPlaces request to return the string to be
+    //displayed in the listViewFragment recyclerView
     public String getOpeningString(Context context, List<Period> listPeriods, Date dateNow) {
 
         result = context.getString(R.string.closed_today);
@@ -26,11 +27,14 @@ public class OpeningHelper {
 
         for (Period period : listPeriods) {
 
+            //if no closing time specified, it means the place is opened 24/7
+            //(Google Developper documentation)
             if (period.getClose() == null) {
                 result = context.getString(R.string.opened247);
 
                 return result;
             }
+            //if one Period concerns the current day of week, this is the one we need for today
             if (period.toString().contains(dayString.toUpperCase())) {
 
                 calendar = Calendar.getInstance();
@@ -47,10 +51,10 @@ public class OpeningHelper {
                     result = context.getString(R.string.now_closed);
                 }
                 if (dateNow.getTime() < openingDate.getTime()) {
-                    result = context.getString(R.string.opens_at) + period.getOpen().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
+                    result = context.getString(R.string.opens_at) + addZero(period.getOpen().getTime().getHours()) + "h" + addZero(period.getOpen().getTime().getMinutes());
                 }
                 if (dateNow.getTime() > openingDate.getTime() && dateNow.getTime() < closingDate.getTime()) {
-                    result = context.getString(R.string.closes_at) + " " +  period.getClose().getTime().getHours() + "h" + period.getOpen().getTime().getMinutes();
+                    result = context.getString(R.string.closes_at) + " " +  addZero(period.getClose().getTime().getHours()) + "h" + addZero(period.getOpen().getTime().getMinutes());
                     if ((closingDate.getTime() - dateNow.getTime()) < 900000) {
                         result = context.getString(R.string.closing_soon);
                     }
@@ -59,5 +63,13 @@ public class OpeningHelper {
         }
 
         return result;
+    }
+
+    private String addZero(int time) {
+        if (time < 10) {
+            return "0" + String.valueOf(time);
+        } else {
+            return String.valueOf(time);
+        }
     }
 }

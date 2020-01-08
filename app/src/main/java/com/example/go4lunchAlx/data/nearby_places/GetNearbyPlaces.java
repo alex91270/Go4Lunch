@@ -29,11 +29,13 @@ public class GetNearbyPlaces {
     private RestApiService service = DI.getRestApiService();
     private LatLng location;
 
+    //constructor with callback as parameter
     public GetNearbyPlaces(OnNearbyPlacesReadyCallback onNearbyPlacesReadyCallback) {
         this.onNearbyPlacesReadyCallback = onNearbyPlacesReadyCallback;
     }
 
     public void downloadNearbyRestaurants(String API_KEY, LatLng loc) {
+        //Disables the detection of everything
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         result = "success";
@@ -41,8 +43,11 @@ public class GetNearbyPlaces {
         Double lat = location.latitude;
         Double lng = location.longitude;
 
+        //builds the request URL for GooglePlaces API with as parameters, the location of the center
+        //of research, the type od establishment, the ranking, and API key
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
+
         try {
             StringBuilder sb = new StringBuilder(PLACES_API_BASE);
             sb.append(TYPE_SEARCH);
@@ -54,11 +59,13 @@ public class GetNearbyPlaces {
 
             URL url = new URL(sb.toString());
             conn = (HttpURLConnection) url.openConnection();
+            //opens up an inputStreamReader to intercept the response from that url
             InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
             int read;
             char[] buff = new char[1024];
             while ((read = in.read(buff)) != -1) {
+                //builds the JSON data out of that stream
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
@@ -74,11 +81,13 @@ public class GetNearbyPlaces {
         }
 
         try {
+            //converts JSON raw data into JSON objects
             JSONObject jsonObj = new JSONObject(jsonResults.toString());
             JSONArray predsJsonArray = jsonObj.getJSONArray("results");
 
             for (int i = 0; i < predsJsonArray.length(); i++) {
                 JSONObject jsonObject = predsJsonArray.getJSONObject(i);
+                //builds a Restaurant object out of the JSON object
                 Restaurant resto = buildRestaurantFromJson(jsonObject);
                 service.addRestaurant(resto);
             }
@@ -94,6 +103,7 @@ public class GetNearbyPlaces {
 
         try {
             String reference = jsonObject.getString("reference");
+            //builds a Restaurant with it's ID only, which is the GooglePlaces identifier
             return new Restaurant(reference);
 
         } catch (JSONException e) {

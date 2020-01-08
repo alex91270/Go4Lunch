@@ -44,6 +44,7 @@ public class SettingsFragment extends Fragment {
     private void setupSpinner() {
 
         final List<String> spinnerArray =  new ArrayList<>();
+        //fills spinner
         spinnerArray.add(context.getString(R.string.sort_dist));
         spinnerArray.add(context.getString(R.string.sort_rate));
         spinnerArray.add(context.getString(R.string.sort_attendants));

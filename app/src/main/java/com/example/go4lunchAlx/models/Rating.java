@@ -18,7 +18,7 @@ public class Rating {
 
     public String getRestaurantID() {return restaurantID;}
 
-    private String getUserID() {return userID;}
+    public String getUserID() {return userID;}
 
     public String getrID() {return rID;}
 

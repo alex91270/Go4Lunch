@@ -30,6 +30,7 @@ public class RestaurantSearchedAdding {
     private Calendar calendar;
     private DistanceHelper distanceHelper = new DistanceHelper();
 
+//builds a Restaurant found via a research by the SearchView and adds it to the service
     public RestaurantSearchedAdding(OnSearchedRestaurantAdded onSearchedRestaurantAdded) {
         this.onSearchedRestaurantAdded = onSearchedRestaurantAdded;
         calendar = Calendar.getInstance();
@@ -41,8 +42,10 @@ public class RestaurantSearchedAdding {
         mPlacesClient = Places.createClient(mContext);
         service.addRestaurantToSearched(new Restaurant(restoId));
 
+        //adds restaurant to service, with it's ID only
         Restaurant resto = service.getRestaurantById(restoId);
 
+        //enrich restaurants details with a fetchPlace request
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.OPENING_HOURS);
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(resto.getId(), placeFields);
 
@@ -73,6 +76,9 @@ public class RestaurantSearchedAdding {
             resto.setDistance(distance);
 
             if (resto.getAttendants()==null) resto.setAttendants(new ArrayList<>());
+
+            resto.setPhoneNumber(place.getPhoneNumber());
+            resto.setWebsite(place.getWebsiteUri());
 
             service.updateSearchedRestaurant(resto);
 

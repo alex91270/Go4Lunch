@@ -67,6 +67,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         afterResearch = false;
+        //callback triggered when a new place has been added through a research
         onSearchedRestaurantAdded = new OnSearchedRestaurantAdded() {
             @Override
             public void onRestaurantAdded() {
@@ -78,14 +79,13 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
         mContext = this.getActivity();
         apiKey = mContext.getString(R.string.google_maps_key);
-
-
-
+        //initialize Places with the API key provided
         if (!Places.isInitialized()) {
             Places.initialize(mContext, apiKey);
         }
         DataViewModel dataViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
 
+        //set up the viewModel to observe any change that occurred to the restaurants list
         dataViewModel.getRestoList().observe(this, new Observer<List<Restaurant>>() {
             public void onChanged(@Nullable List<Restaurant> restos) {
                if (service.getAllRestaurants().size() > 0) placeMarkers();
@@ -102,6 +102,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         super.onViewCreated(view, savedInstanceState);
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        //checks and manages location permission
         if (hasLocationPermission()) {
             getMap();
         } else {
@@ -128,6 +129,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                //when the location changes, the data retrieval is started
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 service.setCurrentLocation(userLocation);
                 selectedLocation = userLocation;
@@ -158,6 +160,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
+                //the location button centers the map and starts a new data retrieval
                 getDatas.process(mContext, service.getCurrentLocation(), apiKey);
                 return true;
             }
@@ -176,7 +179,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-
+                //when getting back the last known location, a data retrieval is started
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 service.setCurrentLocation(userLocation);
                 selectedLocation = userLocation;
@@ -197,6 +200,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
 
             if(r.getDistance()>maxDistance) maxDistance = r.getDistance();
 
+            //a green marker is created by place, red if at least one attendant
             if (r.getAttendants().size() > 0) {
                 mMap.addMarker(new MarkerOptions().position(r.getLocation()).title(r.getName())
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_red_s)));
@@ -207,6 +211,7 @@ public class MapViewFragment extends FragmentSearchViewAutocomplete implements O
                 }
             }
         }
+        //the zoom value is adjusted so that all places fit on the screen
         int zoomValue = 24-((int)(Math.log(maxDistance) / Math.log(2)));
         if (afterResearch) {
             afterResearch = false;

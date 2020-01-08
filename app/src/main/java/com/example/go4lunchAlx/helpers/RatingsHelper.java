@@ -6,6 +6,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+//all CRUD methods to interact with the Firebase ratings table
+
 public class RatingsHelper {
 
     private static final String COLLECTION_NAME = "ratings";

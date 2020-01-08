@@ -6,6 +6,8 @@ import com.example.go4lunchAlx.service.RestApiService;
 
 import java.util.Comparator;
 
+//comparator for sorting by rate
+
 public class SortByRate implements Comparator<Restaurant> {
 
     private RestApiService service = DI.getRestApiService();

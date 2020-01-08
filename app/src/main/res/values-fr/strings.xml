@@ -54,7 +54,7 @@
     <string name="alert_dialog_button">NOTEZ LE !</string>
 
     <!-- LIST VIEW -->
-    <string name="no_opening">Heures d\'ouverture inconnues</string>
+    <string name="no_opening">Horaires inconnus</string>
     <string name="opened247">Ouvert 24/7</string>
     <string name="opens_at">Ouvre à </string>
     <string name="now_closed">Actuellement fermé</string>

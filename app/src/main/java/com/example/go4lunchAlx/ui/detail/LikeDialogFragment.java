@@ -78,12 +78,12 @@ public class LikeDialogFragment extends DialogFragment {
                 starsList.get(i).setImageResource(R.drawable.star30);
             }
 
-            /**star1.setImageResource(R.drawable.star30yellow);
+            star1.setImageResource(R.drawable.star30yellow);
             star2.setImageResource(R.drawable.star30);
             star3.setImageResource(R.drawable.star30);
             star4.setImageResource(R.drawable.star30);
             star5.setImageResource(R.drawable.star30);
-             */
+
         });
         star2.setOnClickListener((View v) -> {
             rateGiven = 2;
@@ -96,11 +96,11 @@ public class LikeDialogFragment extends DialogFragment {
                 starsList.get(i).setImageResource(R.drawable.star30);
             }
 
-            /**star1.setImageResource(R.drawable.star30yellow);
+            star1.setImageResource(R.drawable.star30yellow);
             star2.setImageResource(R.drawable.star30yellow);
             star3.setImageResource(R.drawable.star30);
             star4.setImageResource(R.drawable.star30);
-            star5.setImageResource(R.drawable.star30);*/
+            star5.setImageResource(R.drawable.star30);
         });
         star3.setOnClickListener((View v) -> {
             rateGiven = 3;
@@ -113,11 +113,11 @@ public class LikeDialogFragment extends DialogFragment {
                 starsList.get(i).setImageResource(R.drawable.star30);
             }
 
-            /**star1.setImageResource(R.drawable.star30yellow);
+            star1.setImageResource(R.drawable.star30yellow);
             star2.setImageResource(R.drawable.star30yellow);
             star3.setImageResource(R.drawable.star30yellow);
             star4.setImageResource(R.drawable.star30);
-            star5.setImageResource(R.drawable.star30);*/
+            star5.setImageResource(R.drawable.star30);
         });
         star4.setOnClickListener((View v) -> {
             rateGiven = 4;
@@ -130,11 +130,11 @@ public class LikeDialogFragment extends DialogFragment {
                 starsList.get(i).setImageResource(R.drawable.star30);
             }
 
-            /**star1.setImageResource(R.drawable.star30yellow);
+            star1.setImageResource(R.drawable.star30yellow);
             star2.setImageResource(R.drawable.star30yellow);
             star3.setImageResource(R.drawable.star30yellow);
             star4.setImageResource(R.drawable.star30yellow);
-            star5.setImageResource(R.drawable.star30);*/
+            star5.setImageResource(R.drawable.star30);
         });
         star5.setOnClickListener((View v) -> {
             rateGiven = 5;
@@ -147,11 +147,11 @@ public class LikeDialogFragment extends DialogFragment {
                 starsList.get(i).setImageResource(R.drawable.star30);
             }
 
-            /**star1.setImageResource(R.drawable.star30yellow);
+            star1.setImageResource(R.drawable.star30yellow);
             star2.setImageResource(R.drawable.star30yellow);
             star3.setImageResource(R.drawable.star30yellow);
             star4.setImageResource(R.drawable.star30yellow);
-            star5.setImageResource(R.drawable.star30yellow);*/
+            star5.setImageResource(R.drawable.star30yellow);
         });
 
 
@@ -162,6 +162,8 @@ public class LikeDialogFragment extends DialogFragment {
             } else {
                 String rid = service.getCurrentUserId() + restoId;
                 rating = new Rating( rid, restoId, service.getCurrentUserId(), rateGiven );
+
+
                 if(service.getListOfRatings().contains(rating)) {
                     Rating oldRating = listOfRatings.get((listOfRatings.indexOf(rating)));
                     RatingsHelper.updateRate(rateGiven, oldRating.getrID());

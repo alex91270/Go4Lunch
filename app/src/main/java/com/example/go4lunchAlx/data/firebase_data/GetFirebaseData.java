@@ -24,23 +24,26 @@ public class GetFirebaseData {
     private OnFirebaseDataReadyCallback onFirebaseDataReadyCallback;
     private static String result;
     private RestApiService service = DI.getRestApiService();
-    private ResultCode resultCode;
     private static final String LOG_TAG = "Go4Lunch";
 
+    //constructor with the callback as parameter
     public GetFirebaseData(OnFirebaseDataReadyCallback onFirebaseDataReadyCallback) {
         this.onFirebaseDataReadyCallback = onFirebaseDataReadyCallback;
     }
 
     public void downloadDataFromFirebase() {
+        //Disables the detection of everything
        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
        StrictMode.setThreadPolicy(policy);
 
-        result = "success";
+       //if no issue, the result is gonna be "success
+       result = "success";
 
        downloadUsers();
     }
 
     private void downloadUsers() {
+        //get back collection users from Firebase
         CollectionReference userRef = FirebaseFirestore.getInstance().collection("users");
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -49,6 +52,7 @@ public class GetFirebaseData {
                 if (task.isSuccessful()) {
                     service.clearFirebaseUsers();
                     for (DocumentSnapshot document : task.getResult()) {
+                        //turn items into User objects and add them to service list
                         User user = document.toObject(User.class);
 
                         if (!service.getFirebaseUsers().contains(user)) {
@@ -59,6 +63,7 @@ public class GetFirebaseData {
                     downloadRatings();
 
                 } else {
+                    //if failed, call the callback with error message
                     result = Resources.getSystem().getString(R.string.failure_users);
                     Log.e(LOG_TAG, "Failed getting users");
                     onFirebaseDataReadyCallback.onFirebaseDataReady(result);

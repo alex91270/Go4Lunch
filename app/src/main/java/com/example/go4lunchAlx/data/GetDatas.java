@@ -2,6 +2,8 @@ package com.example.go4lunchAlx.data;
 
 import android.content.Context;
 import android.widget.Toast;
+
+import com.example.go4lunchAlx.R;
 import com.example.go4lunchAlx.helpers.DistanceHelper;
 import com.example.go4lunchAlx.helpers.OpeningHelper;
 import com.example.go4lunchAlx.data.firebase_data.GetFirebaseData;
@@ -27,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+//Retrieves all data, from nearby places and Firebase
 public class GetDatas {
 
     private RestApiService service = DI.getRestApiService();
@@ -48,6 +51,7 @@ public class GetDatas {
         service.clearRestaurants();
         calendar = Calendar.getInstance();
         date = calendar.getTime();
+        //starts by getting nearby places
         getNearbyPlacesData(location, apiKey);
     }
 
@@ -59,6 +63,7 @@ public class GetDatas {
             public void OnNearbyPlacesReady(String result) {
                 if (!result.equals("success")) {
                 Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();}
+                //once nearby places got, then gets firebase data
                 getFirebaseData();
             }
         });
@@ -72,6 +77,7 @@ public class GetDatas {
                 public void onFirebaseDataReady(String result) {
                     if (!result.equals("success")) {
                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();}
+                    //once nearby places and firebase data got, then process and merges both
                     mergeDatas();
                 }
             });
@@ -84,6 +90,8 @@ public class GetDatas {
         Restaurant selectedRestaurant;
         ArrayList<String> attendants = new ArrayList<>();
 
+        //if a user has selected a restaurant for today, which has not been found around the current
+        //user, then this restaurant is added to the service list
         for (User user: service.getFirebaseUsers()) {
             attendants.clear();
             if (user.getDateSelection()!= null && getToday().equals(getDayFromLong(user.getDateSelection()))) {
@@ -104,6 +112,7 @@ public class GetDatas {
         }
     }
 
+    //enrich the restaurants of the list with all required details, through a fetchPlaces request
     private void fetchRestaurantInfos(String restoId) {
 
         Restaurant resto = service.getRestaurantById(restoId);
@@ -126,7 +135,7 @@ public class GetDatas {
             }
             resto.setPhoto(photoRef);
 
-            String opening = "No opening hours";
+            String opening = mContext.getString(R.string.no_opening);
             if (place.getOpeningHours() != null){
                 List<Period> listPeriods = place.getOpeningHours().getPeriods();
               opening = new OpeningHelper().getOpeningString(mContext, listPeriods, date);
@@ -138,8 +147,12 @@ public class GetDatas {
 
             if (resto.getAttendants()==null) resto.setAttendants(new ArrayList<>());
 
+            resto.setPhoneNumber(place.getPhoneNumber());
+            resto.setWebsite(place.getWebsiteUri());
+
             service.updateRestaurant(resto);
 
+            //when all restaurants processed, update viewModel
             if (place.getId().equals(service.getRestaurants().get(service.getRestaurants().size()-1).getId())) {
                 dataViewModel.updateViewModel();
             }

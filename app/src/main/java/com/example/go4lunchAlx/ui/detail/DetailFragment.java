@@ -64,6 +64,7 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //get back the restaurant ID from the Intent, then, the restaurant concerned
         restoId = getArguments().getString("restoId");
         mRestaurant = service.getRestaurantById(restoId);
     }
@@ -140,6 +141,8 @@ public class DetailFragment extends Fragment {
     private void setValues(){
         textViewName.setText(mRestaurant.getName());
         textViewAddress.setText(mRestaurant.getVicinity());
+        mPhone = mRestaurant.getPhoneNumber();
+        mWebsite = mRestaurant.getWebsite();
         mPicture = mRestaurant.getPhoto();
         if (mPicture.equals("no_pic")) {
             mRestaurantPhoto.setImageResource(R.drawable.resto_sign300);

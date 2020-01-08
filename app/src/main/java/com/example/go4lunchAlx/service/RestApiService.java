@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestApiService implements ApiService {
+    //data provided by the service to all activities and fragments
+    //and methods used to interact with it
 
     private List<User> firebaseUsers = new ArrayList<>();
     private User currentUser = null;
@@ -212,11 +214,7 @@ public class RestApiService implements ApiService {
         int numberRates = 0;
         int totalRate = 0;
         for (Rating rating : listOfRatings) {
-            Log.i("alex", "rating id: " + rating.getrID());
-            Log.i("alex", "resto: " + rating.getRestaurantID());
-            Log.i("alex", "rate: " + rating.getRate());
             if (rating.getRestaurantID().equals(restaurant.getId())){
-                Log.i("alex", "rating found, rate is: " + rating.getRate());
                 totalRate+=rating.getRate();
                 numberRates+=1;
             }

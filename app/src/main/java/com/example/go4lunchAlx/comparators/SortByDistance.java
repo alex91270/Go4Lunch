@@ -4,6 +4,8 @@ import com.example.go4lunchAlx.models.Restaurant;
 
 import java.util.Comparator;
 
+//comparator for sorting by distance
+
 public class SortByDistance implements Comparator<Restaurant> {
 
     @Override
